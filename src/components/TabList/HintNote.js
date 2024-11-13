@@ -1,3 +1,4 @@
+//힌트 목록을 보여주는 탭
 import React from "react";
 import styled from "styled-components";
 

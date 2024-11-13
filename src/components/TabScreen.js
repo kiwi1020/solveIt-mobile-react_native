@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import HintNote from "./HintNote";
+import HintNote from "./TabList/HintNote";
 import { Hints } from "../static/Hints";
 import { Figures } from "../static/Figures";
+import HomeTab from "./TabList/HomeTab";
 
 const Container = styled.View`
   flex: 1;
@@ -45,6 +46,7 @@ export const Home = () => {
   return (
     <Container>
       <StyledText>Home</StyledText>
+      <HomeTab/>
     </Container>
   );
 };
