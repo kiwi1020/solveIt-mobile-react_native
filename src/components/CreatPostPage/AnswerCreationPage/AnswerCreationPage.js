@@ -31,13 +31,13 @@ const AnswerCreationPage = () => {
 
   const handleSave = () => {
     // 입력 값을 저장하거나 업데이트하는 로직 작성
-    console.log("사건 이름:", caseName);
+    console.log("정담 입력:", caseName);
   };
 
   return (
     <Container>
       <Input
-        placeholder="사건 이름 입력"
+        placeholder="정답 입력"
         value={caseName}
         onChangeText={(text) => setCaseName(text)}
       />
