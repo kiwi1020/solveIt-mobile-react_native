@@ -3,9 +3,8 @@ import React from 'react';
 // import { NavigationContainer } from '@react-navigation/native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Hint, Home, Figure, Situation, Evidence  } from './TabScreen';
+import {  Home, Main, Number  } from './TabScreen';
 //게시글 작성 버튼
-import PostCreationStack from './CreatPostPage/PostCreationStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,13 +12,9 @@ const TabNavigation = () =>{
 return (
 
   <Tab.Navigator>
-      <Tab.Screen name='Home' component={Home} />
-      <Tab.Screen name='Hint' component={Hint} />
-      <Tab.Screen name='figure' component={Figure} />
-      <Tab.Screen name='evidence' component={Evidence} />
-      <Tab.Screen name='Situation' component={Situation} />
-      <Tab.Screen name="PostCreation" component={PostCreationStack} options={{ tabBarLabel: '게시글 작성' }} />
-
+      <Tab.Screen name='메인' component={Main} />
+      <Tab.Screen name='홈' component={Home} />
+      <Tab.Screen name='번호표' component={Number} />
   </Tab.Navigator>
 
 
