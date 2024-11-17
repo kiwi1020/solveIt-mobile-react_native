@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
+import StoreList from "./Home/StoreList";
 
 const Container = styled.View`
   flex: 1;
@@ -10,6 +10,7 @@ const Container = styled.View`
 
 const StyledText = styled.Text`
   font-size: 30px;
+  
 `;
 
 
@@ -17,7 +18,7 @@ const StyledText = styled.Text`
 export const Home = () => {
   return (
     <Container>
-      <StyledText>Home</StyledText>
+      <StoreList/>
     </Container>
   );
 };
@@ -26,7 +27,7 @@ export const Home = () => {
 export const Main = () => {
   return (
     <Container>
-      <StyledText>Situation</StyledText>
+      <StyledText>메인</StyledText>
     </Container>
   );
 };
@@ -35,7 +36,7 @@ export const Main = () => {
 export const Number = () => {
   return (
     <Container>
-      <StyledText>Evidence</StyledText>
+      <StyledText>번호표</StyledText>
     </Container>
   );
 };

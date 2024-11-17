@@ -1,4 +1,6 @@
 import { initializeApp } from 'firebase/app';
+import { getDatabase } from 'firebase/database'; // Realtime Database
+import { initializeFirestore } from 'firebase/firestore';
 import { 
   FIREBASE_API_KEY, 
   FIREBASE_AUTH_DOMAIN, 
@@ -18,7 +20,12 @@ const firebaseConfig = {
   appId: FIREBASE_APP_ID
 };
 
+const app = initializeApp(firebaseConfig);
+
 // Firebase 앱 초기화
 const firebaseApp = initializeApp(firebaseConfig);
+
+// Realtime Database 초기화
+const database = getDatabase(firebaseApp);
 
 export default firebaseApp;

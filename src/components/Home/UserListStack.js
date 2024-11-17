@@ -9,7 +9,11 @@ import StoreDetail from './StoreDetail';
 const Stack = createStackNavigator();
 
 const UserListStack = () => (
-  <Stack.Navigator initialRouteName="StoreList">
+  <Stack.Navigator 
+  initialRouteName="StoreList"
+  screenOptions={{
+    headerBackTitle: "뒤로가기", // 뒤로가기 버튼 텍스트 수정
+  }}>
     <Stack.Screen name="StoreList" component={StoreList} options={{ title: '게시글 목록' }} />
     <Stack.Screen name="StoreDetail" component={StoreDetail} options={{ title: '가게 이름' }} />
   </Stack.Navigator>
