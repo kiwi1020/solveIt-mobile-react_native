@@ -1,65 +1,66 @@
-import React, { useEffect } from "react";
-
-// 탭 네비게이션
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { View, Text, StyleSheet } from "react-native"; // View와 Text 가져오기
 import TabNavigation from "./components/Tab";
-
-// // 파이어 베이스 쓰는법
-// import firebaseApp from "./firebase/firebaseConfig";
-// import { getFirestore, collection, addDoc } from "firebase/firestore";
-
-// const db = getFirestore(firebaseApp);
+import AsyncStorage from "@react-native-async-storage/async-storage"; // 로컬 저장소
+import uuid from "react-native-uuid"; // UUID 라이브러리
 
 export default function App() {
-  
-  // // Firestore에 데이터를 넣는 함수
-  // const addUserToFirestore = async () => {
-  //   try {
-  //     // 'users'라는 컬렉션에 새 문서 추가
-  //     const docRef = await addDoc(collection(db, "users"), {
-  //       storecode: "defaultStore", //가게 고유번호
-  //       usercode: "defaultUser", //고객 고유번호
-  //       number: "0", //번호표 번호
-  //       state: "waiting", //상태
-  //       personnel: "0",//인원 수
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // };
+  const [deviceId, setDeviceId] = useState(null); // UUID 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
 
-  //  // Firestore에 데이터를 넣는 함수
-  //  const addStoreToFirestore = async () => {
-  //   try {
-  //     // 'users'라는 컬렉션에 새 문서 추가
-  //     const docRef = await addDoc(collection(db, "users"), {
-  //       storecode: "defaultStore", //가게 고유번호
-  //       storename: "Default Store", //가게 이름
-  //       image1: "image1.png",
-  //       image2: "image1.png",
-  //       image3: "image1.png",
-  //       image4: "image1.png",
-  //       image5: "image1.png",
-  //       image6: "image1.png",
-  //       image7: "image1.png",
-  //       image8: "image1.png",
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // };
+  useEffect(() => {
+    const fetchOrCreateUUID = async () => {
+      try {
+        // AsyncStorage에서 UUID 가져오기
+        const storedId = await AsyncStorage.getItem("deviceId");
 
-  // // 컴포넌트가 처음 렌더링될 때 Firestore에 데이터를 추가하도록 호출
-  // useEffect(() => {
-  //   addUserToFirestore();
-  //   addStoreToFirestore();
-  // }, []);
+        if (storedId) {
+          setDeviceId(storedId); // 저장된 UUID 사용
+          console.log("기존 UUID 사용:", storedId);
+        } else {
+          // 저장된 UUID가 없으면 새로 생성
+          const newId = uuid.v4();
+          await AsyncStorage.setItem("deviceId", newId); // UUID 저장
+          setDeviceId(newId); // 상태 업데이트
+          console.log("새 UUID 생성:", newId);
+        }
+      } catch (error) {
+        console.error("UUID 처리 오류:", error);
+      } finally {
+        setLoading(false); // 로딩 상태 해제
+      }
+    };
+
+    fetchOrCreateUUID();
+  }, []);
+
+  if (loading) {
+    // 로딩 중일 때 화면 표시
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>로딩 중...</Text>
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
-      <TabNavigation />
+      {/* UUID를 TabNavigation에 전달 */}
+      <TabNavigation deviceId={deviceId} />
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#6661D5",
+  },
+  loadingText: {
+    fontSize: 20,
+    color: "#fff",
+  },
+});

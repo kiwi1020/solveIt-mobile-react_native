@@ -7,7 +7,7 @@ import { getFirestore, collection, doc, runTransaction } from "firebase/firestor
 
 const db = getFirestore(firebaseApp);
 
-export default function StoreDetail() {
+export default function StoreDetail({ deviceId }) {
     const [ticketNumber, setTicketNumber] = useState(null); // 대기표 번호 저장
     const [personnel, setPersonnel] = useState(1); // 기본 인원 수 (최소 1명)
     const [loading, setLoading] = useState(false); // 로딩 상태
@@ -34,7 +34,7 @@ export default function StoreDetail() {
           // **하위 컬렉션 경로**: storeTickets/{storeId}/tickets
           const ticketRef = doc(collection(db, "store", storecode, "tickets"), `ticket_${nextNumber}`);
           transaction.set(ticketRef, {
-            usercode: usercode,
+            usercode: deviceId, //uuid사용
             number: nextNumber,
             state: "waiting",
             personnel: personnel,

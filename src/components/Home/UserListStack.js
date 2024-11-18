@@ -8,14 +8,16 @@ import StoreDetail from './StoreDetail';
 
 const Stack = createStackNavigator();
 
-const UserListStack = () => (
+const UserListStack = ({ deviceId }) => (
   <Stack.Navigator 
   initialRouteName="StoreList"
   screenOptions={{
     headerBackTitle: "뒤로가기", // 뒤로가기 버튼 텍스트 수정
   }}>
     <Stack.Screen name="StoreList" component={StoreList} options={{ title: '게시글 목록' }} />
-    <Stack.Screen name="StoreDetail" component={StoreDetail} options={{ title: '가게 이름' }} />
+    <Stack.Screen name="StoreDetail">
+      {() => <StoreDetail deviceId={deviceId} />}
+    </Stack.Screen>
   </Stack.Navigator>
 );
 
