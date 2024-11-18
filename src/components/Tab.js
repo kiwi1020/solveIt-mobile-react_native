@@ -3,9 +3,9 @@ import React from 'react';
 // import { NavigationContainer } from '@react-navigation/native';
 import UserListStack from "./Home/UserListStack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {    Number  } from './TabScreen';
 import Icon from "react-native-vector-icons/Ionicons"; // 아이콘 라이브러리 import
 import MainStack from "./MainStack";
+import StoreTicketStack from "./Number/StoreTicketStack";
 //게시글 작성 버튼
 
 const Tab = createBottomTabNavigator();
@@ -35,9 +35,9 @@ return (
     tabBarInactiveTintColor: "gray", // 비활성화된 탭 색상
   })}
   >
-      <Tab.Screen name='메인' component={MainStack} />
+      <Tab.Screen name='메인' component={MainStack} /> 
       <Tab.Screen name='홈' component={UserListStack} /> 
-      <Tab.Screen name='번호표' component={Number} />
+      <Tab.Screen name='번호표' component={StoreTicketStack} />
   </Tab.Navigator>
 
 
