@@ -2,7 +2,6 @@ import React from 'react';
 //탭 기능
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons"; // 아이콘 라이브러리 import
-import App from "../App";
 import StoreRegisterEditStack from "./AdminNumber/StoreRegisterEditStack";
 import StoreTicketStack from "./AdminNumber/StoreTicketStack";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
