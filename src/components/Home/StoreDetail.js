@@ -13,7 +13,7 @@ export default function StoreDetail({ deviceId }) {
     const [loading, setLoading] = useState(false); // 로딩 상태
   
     // 대기표 생성 함수 (하위 컬렉션 사용)
-    const createTicketWithSubCollection = async (storecode, usercode) => {
+    const createTicketWithSubCollection = async (storecode) => {
       try {
         setLoading(true);
   
@@ -32,9 +32,8 @@ export default function StoreDetail({ deviceId }) {
           transaction.set(storeRef, { nextNumber });
   
           // **하위 컬렉션 경로**: storeTickets/{storeId}/tickets
-          const ticketRef = doc(collection(db, "store", storecode, "tickets"), `ticket_${nextNumber}`);
+          const ticketRef = doc(collection(db, "store", storecode, "tickets"), `${deviceId}`);
           transaction.set(ticketRef, {
-            usercode: deviceId, //uuid사용
             number: nextNumber,
             state: "waiting",
             personnel: personnel,

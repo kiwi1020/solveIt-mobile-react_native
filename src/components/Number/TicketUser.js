@@ -1,66 +1,61 @@
 //넘버 - 사용자 번호표
-
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import firebaseApp from "../../firebase/firebaseConfig";
-import { getFirestore, collection, query, onSnapshot } from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const db = getFirestore(firebaseApp);
 
-export default function TicketUser() {
-  const [tickets, setTickets] = useState([]); // 대기표 데이터 상태 저장
+export default function MyTicket({ deviceId, storecode = "store123" }) {
+  const [myTicketNumber, setMyTicketNumber] = useState(null); // 내가 뽑은 번호
+  const [personnel, setPersonnel] = useState(null); // 인원 수
   const [loading, setLoading] = useState(true); // 로딩 상태
 
   useEffect(() => {
-    // Firestore에서 하위 컬렉션 데이터 실시간 구독
-    const storecode = "store123"; // 조회할 가게 ID
-    const ticketsRef = collection(db, "store", storecode, "tickets"); // 하위 컬렉션 경로
-    const q = query(ticketsRef);
+    const TicketUser = async () => {
+      try {
+        const ticketRef = doc(db, "store", storecode, "tickets", `${deviceId}`);
+        const ticketDoc = await getDoc(ticketRef);
 
-    const unsubscribe = onSnapshot(
-      q,
-      (querySnapshot) => {
-        const ticketList = [];
-        querySnapshot.forEach((doc) => {
-          ticketList.push({ id: doc.id, ...doc.data() });
-        });
-        setTickets(ticketList); // 대기표 데이터 업데이트
+        if (ticketDoc.exists()) {
+            const ticketData = ticketDoc.data();
+            setMyTicketNumber(ticketData.number);    // 번호표 저장      
+            setPersonnel(ticketData.personnel); // 인원 수 저장
+          console.log("내 대기표 번호:", ticketDoc.data().number);//추후 지울 것
+          console.log("인원 수:", ticketData.personnel); //추후 지울 것
+        } else {
+          console.log("내 대기표가 없습니다."); //추후 지울 것
+          setMyTicketNumber(null);
+          setPersonnel(null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch ticket:", error);
+      } finally {
         setLoading(false);
-      },
-      (error) => {
-        console.error("Failed to fetch tickets: ", error);
       }
-    );
+    };
 
-    // 컴포넌트 언마운트 시 구독 해제
-    return () => unsubscribe();
-  }, []);
+    TicketUser();
+  }, [deviceId, storecode]);
 
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text style={styles.loadingText}>로딩 중...</Text>
+        <Text style={styles.text}>로딩 중...</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>대기표 목록</Text>
-      {tickets.length > 0 ? (
-        <FlatList
-          data={tickets}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.ticketItem}>
-              <Text style={styles.ticketText}>번호: {item.number}</Text>
-              <Text style={styles.ticketText}>인원: {item.personnel}명</Text>
-              <Text style={styles.ticketText}>상태: {item.state}</Text>
-            </View>
-          )}
-        />
+      {myTicketNumber ? (
+        <>        
+        <Text style={styles.text}>내 대기표 번호: {myTicketNumber}</Text>
+        <Text style={styles.text}>인원 수: {personnel}명</Text>
+        </>
+
       ) : (
-        <Text style={styles.noTickets}>현재 대기표가 없습니다.</Text>
+        <Text style={styles.text}>현재 대기표가 없습니다.</Text>
       )}
     </View>
   );
@@ -69,35 +64,13 @@ export default function TicketUser() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#6661D5",
   },
-  header: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#fff",
-  },
-  loadingText: {
+  text: {
     fontSize: 20,
     color: "#fff",
-  },
-  ticketItem: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    width: "90%",
-    alignItems: "center",
-  },
-  ticketText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  noTickets: {
-    fontSize: 18,
-    color: "#fff",
+    fontWeight: "bold",
   },
 });
-

@@ -3,8 +3,8 @@ import React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons"; // 아이콘 라이브러리 import
 import App from "../App";
-import UserListStack from "./Home/UserListStack";
-import TicketUserStack from "./Number/TicketUserStack";
+import StoreRegisterEditStack from "./AdminNumber/StoreRegisterEditStack";
+import StoreTicketStack from "./AdminNumber/StoreTicketStack";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 const Tab = createBottomTabNavigator();
@@ -44,28 +44,30 @@ const TabNavigation = ({ deviceId, setSelectedRole  }) => {
           </TouchableOpacity>
         )}
       </Tab.Screen>
-      <Tab.Screen name="홈">
-        {() => <UserListStack deviceId={deviceId} />}
+      <Tab.Screen name="번호표 관리">
+        {() => <StoreTicketStack deviceId={deviceId} />}
       </Tab.Screen>
-      <Tab.Screen name="번호표">
-        {() => <TicketUserStack deviceId={deviceId} />}
+      <Tab.Screen name="가게 관리">
+        {() => <StoreRegisterEditStack deviceId={deviceId} />}
       </Tab.Screen>
+      
     </Tab.Navigator>
   );
 };
 
 
 const styles = StyleSheet.create({
-  button: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  buttonText: {
-    color: "#6661D5",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
+    button: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#fff",
+    },
+    buttonText: {
+      color: "#6661D5",
+      fontSize: 18,
+      fontWeight: "bold",
+    },
+  });
+
 export default TabNavigation;
