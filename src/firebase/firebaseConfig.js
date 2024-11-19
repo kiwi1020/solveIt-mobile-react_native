@@ -20,7 +20,6 @@ const firebaseConfig = {
   appId: FIREBASE_APP_ID
 };
 
-const app = initializeApp(firebaseConfig);
 
 // Firebase 앱 초기화
 const firebaseApp = initializeApp(firebaseConfig);
