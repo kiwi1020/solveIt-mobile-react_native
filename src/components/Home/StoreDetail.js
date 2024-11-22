@@ -7,19 +7,20 @@ import { getFirestore, collection, doc, runTransaction } from "firebase/firestor
 
 const db = getFirestore(firebaseApp);
 
-export default function StoreDetail({ deviceId }) {
+export default function StoreDetail({ route }) {
     const [ticketNumber, setTicketNumber] = useState(null); // 대기표 번호 저장
     const [personnel, setPersonnel] = useState(1); // 기본 인원 수 (최소 1명)
     const [loading, setLoading] = useState(false); // 로딩 상태
-  
+    const { storeCode, deviceId } = route.params;
+    
     // 대기표 생성 함수 (하위 컬렉션 사용)
-    const createTicketWithSubCollection = async (storecode) => {
+    const createTicketWithSubCollection = async (storeCode) => {
       try {
         setLoading(true);
   
         // Firestore 트랜잭션 실행
         const nextNumber = await runTransaction(db, async (transaction) => {
-          const storeRef = doc(db, "store", storecode); // storeTickets/가게ID
+          const storeRef = doc(db, "store", storeCode); // storeTickets/가게ID
   
           // 현재 대기표 번호 가져오기
           const storeDoc = await transaction.get(storeRef);
@@ -29,10 +30,10 @@ export default function StoreDetail({ deviceId }) {
           }
   
           // 다음 대기표 번호 업데이트
-          transaction.set(storeRef, { nextNumber });
+          transaction.set(storeRef, { nextNumber }, { merge: true });
   
           // **하위 컬렉션 경로**: storeTickets/{storeId}/tickets
-          const ticketRef = doc(collection(db, "store", storecode, "tickets"), `${deviceId}`);
+          const ticketRef = doc(collection(db, "store", storeCode, "tickets"), `${deviceId}`);
           transaction.set(ticketRef, {
             number: nextNumber,
             state: "waiting",
@@ -44,7 +45,7 @@ export default function StoreDetail({ deviceId }) {
   
         // 성공적으로 대기표 번호 저장
         setTicketNumber(nextNumber);
-        console.log(`Ticket ${nextNumber} created for store ${storecode}`);
+        console.log(`Ticket ${nextNumber} created for store ${storeCode}`);
       } catch (error) {
         console.error("Transaction failed: ", error);
       } finally {
@@ -76,7 +77,7 @@ export default function StoreDetail({ deviceId }) {
         </View>
         <Button
           title={loading ? "대기표 생성 중..." : "대기표 뽑기"}
-          onPress={() => createTicketWithSubCollection("store123", "user001")} // 예제: store123, user001
+          onPress={() => createTicketWithSubCollection( storeCode, "user001")} // 예제: store123, user001
           disabled={loading}
         />
         {ticketNumber && (

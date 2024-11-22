@@ -14,8 +14,8 @@ export default function StoreTicketList() {
 
   useEffect(() => {
     // Firestore에서 하위 컬렉션 데이터 실시간 구독
-    const storecode = "store123"; // 조회할 가게 ID
-    const ticketsRef = collection(db, "store", storecode, "tickets"); // 하위 컬렉션 경로
+    const storeCode = "store123"; // 조회할 가게 ID
+    const ticketsRef = collection(db, "store", storeCode, "tickets"); // 하위 컬렉션 경로
     const q = query(ticketsRef);
 
     const unsubscribe = onSnapshot(
