@@ -14,16 +14,27 @@ export default function App() {
   useEffect(() => {
     const fetchOrCreateUUID = async () => {
       try {
+        //테스트
+        await AsyncStorage.removeItem("deviceId"); // 저장된 UUID 삭제
+
+        
         const storedId = await AsyncStorage.getItem("deviceId");
 
         if (storedId) {
           setDeviceId(storedId); // 저장된 UUID 사용
           console.log("기존 UUID 사용:", storedId);
         } else {
-          const newId = uuid.v4();
-          await AsyncStorage.setItem("deviceId", newId); // UUID 저장
-          setDeviceId(newId); // 상태 업데이트
-          console.log("새 UUID 생성:", newId);
+           // 테스트용 고정 UUID 설정
+            const testId = "123e4567-e89b-12d3-a456-426614174000"; // 원하는 UUID
+            await AsyncStorage.setItem("deviceId", testId); // UUID 저장
+            setDeviceId(testId); // 상태 업데이트
+            console.log("테스트 UUID 사용:", testId);
+
+
+          // const newId = uuid.v4();
+          // await AsyncStorage.setItem("deviceId", newId); // UUID 저장
+          // setDeviceId(newId); // 상태 업데이트
+          // console.log("새 UUID 생성:", newId);
         }
       } catch (error) {
         console.error("UUID 처리 오류:", error);
