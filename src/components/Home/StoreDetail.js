@@ -11,7 +11,8 @@ export default function StoreDetail({ route }) {
     const [ticketNumber, setTicketNumber] = useState(null); // 대기표 번호 저장
     const [personnel, setPersonnel] = useState(1); // 기본 인원 수 (최소 1명)
     const [loading, setLoading] = useState(false); // 로딩 상태
-    const { storeCode, deviceId } = route.params;
+    const { storeCode, deviceId } = route.params; 
+    // storeCode는 가게 UUID이고 deviceId는 사용자 UUID임
     
     // 대기표 생성 함수 (하위 컬렉션 사용)
     const createTicketWithSubCollection = async (storeCode) => {
@@ -33,7 +34,7 @@ export default function StoreDetail({ route }) {
           transaction.set(storeRef, { nextNumber }, { merge: true });
   
           // **하위 컬렉션 경로**: storeTickets/{storeId}/tickets
-          const ticketRef = doc(collection(db, "store", storeCode, "tickets"), `${deviceId}`);
+          const ticketRef = doc(collection(db, "store", storeCode, "tickets"), deviceId);
           transaction.set(ticketRef, {
             number: nextNumber,
             state: "waiting",

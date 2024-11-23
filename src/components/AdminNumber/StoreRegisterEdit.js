@@ -73,13 +73,14 @@ const StoreRegisterEdit = ({ route }) => {
 
       // 업로드 완료 후 다운로드 URL 가져오기
       const downloadURL = await getDownloadURL(storageRef);
-      console.log("파일 업로드 성공123:", downloadURL);
+      console.log("파일 업로드 성공:", downloadURL);
 
-      const docRef = doc(db, "store", "store123");
+      const docRef = doc(db, "store", deviceId);
       await setDoc(docRef, {
         name: storeName,
         image: downloadURL,
-        deviceId: deviceId,
+        storeCode: deviceId,
+        nextNumber: 0,
       });
 
       alert("가게 정보가 성공적으로 등록되었습니다!");
@@ -112,12 +113,11 @@ const StoreRegisterEdit = ({ route }) => {
       const downloadURL = await getDownloadURL(storageRef);
       console.log("파일 업로드 성공:", downloadURL);
       
-      const docRef = doc(db, "store", "store123");
+      const docRef = doc(db, "store", deviceId);
       await setDoc(docRef, {
         name: storeName,
         image: downloadURL,
-        deviceId: deviceId,
-        storeCode: "store123",
+        storeCode: deviceId,
         nextNumber: 0,
       });
       

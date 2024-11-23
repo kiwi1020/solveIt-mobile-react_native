@@ -25,10 +25,11 @@ const StoreName = styled.Text`
   color: #333;
 `;
 
-const StoreList = () => {
+const StoreList = ({ route }) => {
   const navigation = useNavigation();
   const [stores, setStores] = useState([]);
-  
+  const deviceId = route.params.deviceId;
+
   // Firebase 앱 초기화
   let app;
   if (!getApps().length) {
@@ -66,7 +67,7 @@ const StoreList = () => {
   return (
     <Container>
       {stores.map((store) => (
-        <StoreCard key={store.id} onPress={() => navigateToDetail(store.storeCode, store.deviceId)}>
+        <StoreCard key={store.id} onPress={() => navigateToDetail(store.storeCode, deviceId)}>
           <StoreName>{store.name}</StoreName>
         </StoreCard>
       ))}
