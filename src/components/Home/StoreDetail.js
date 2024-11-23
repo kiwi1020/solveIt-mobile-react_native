@@ -32,6 +32,16 @@ export default function StoreDetail({ route }) {
   
           // 다음 대기표 번호 업데이트
           transaction.set(storeRef, { nextNumber }, { merge: true });
+
+          // **users 컬렉션 경로**: users/{deviceId}
+          const userRef = doc(db, "users", deviceId);
+          transaction.set(userRef, {
+            storeCode,
+            number: nextNumber,
+            state: "waiting",
+            personnel: personnel,
+          }, { merge: true });
+
   
           // **하위 컬렉션 경로**: storeTickets/{storeId}/tickets
           const ticketRef = doc(collection(db, "store", storeCode, "tickets"), deviceId);
