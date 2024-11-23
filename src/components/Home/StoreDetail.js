@@ -1,9 +1,9 @@
 //홈 - 가게 세부 정보
 
-import React, { useState  } from "react";
+import React, { useState, useEffect  } from "react";
 import { Button, View, Text, StyleSheet, TouchableOpacity } from "react-native";// 파이어 베이스 쓰는법
 import firebaseApp from "../../firebase/firebaseConfig";
-import { getFirestore, collection, doc, runTransaction } from "firebase/firestore";
+import { getFirestore, collection, doc, runTransaction, getDoc  } from "firebase/firestore";
 
 const db = getFirestore(firebaseApp);
 
@@ -11,9 +11,29 @@ export default function StoreDetail({ route }) {
     const [ticketNumber, setTicketNumber] = useState(null); // 대기표 번호 저장
     const [personnel, setPersonnel] = useState(1); // 기본 인원 수 (최소 1명)
     const [loading, setLoading] = useState(false); // 로딩 상태
+    const [canDrawTicket, setCanDrawTicket] = useState(true); // 대기표 뽑기 가능 여부
     const { storeCode, deviceId } = route.params; 
     // storeCode는 가게 UUID이고 deviceId는 사용자 UUID임
     
+    // 사용자 대기표 여부 확인
+    useEffect(() => {
+      const checkUserTicket = async () => {
+        try {
+          const userRef = doc(db, "users", deviceId);
+          const userDoc = await getDoc(userRef);
+
+          if (userDoc.exists()) {
+            setCanDrawTicket(false); // 이미 대기표가 있음 -> 버튼 비활성화
+            console.log("이미 대기표를 뽑았습니다.");
+          }
+        } catch (error) {
+          console.error("대기표 확인 중 오류:", error);
+        }
+      };
+
+      checkUserTicket();
+    }, [deviceId]);
+
     // 대기표 생성 함수 (하위 컬렉션 사용)
     const createTicketWithSubCollection = async (storeCode) => {
       try {
@@ -56,6 +76,7 @@ export default function StoreDetail({ route }) {
   
         // 성공적으로 대기표 번호 저장
         setTicketNumber(nextNumber);
+        setCanDrawTicket(false); // 대기표를 뽑았으므로 버튼 비활성화
         console.log(`Ticket ${nextNumber} created for store ${storeCode}`);
       } catch (error) {
         console.error("Transaction failed: ", error);
@@ -87,10 +108,10 @@ export default function StoreDetail({ route }) {
           </TouchableOpacity>
         </View>
         <Button
-          title={loading ? "대기표 생성 중..." : "대기표 뽑기"}
-          onPress={() => createTicketWithSubCollection( storeCode, "user001")} // 예제: store123, user001
-          disabled={loading}
-        />
+        title={loading ? "대기표 생성 중..." : canDrawTicket ? "대기표 뽑기" : "이미 대기표를 뽑았습니다"}
+        onPress={() => createTicketWithSubCollection(storeCode)}
+        disabled={loading || !canDrawTicket} // 로딩 중이거나 이미 대기표를 뽑았다면 비활성화
+      />
         {ticketNumber && (
           <Text style={styles.ticketInfo}>
             당신의 대기표 번호는 {ticketNumber}번입니다.

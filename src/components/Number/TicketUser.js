@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import firebaseApp from "../../firebase/firebaseConfig";
-import { getFirestore, doc, getDoc, updateDoc, writeBatch} from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc, writeBatch, deleteDoc } from "firebase/firestore";
 
 const db = getFirestore(firebaseApp);
 
@@ -56,7 +56,7 @@ export default function MyTicket({ deviceId }) {
         // store/{storeCode}/tickets/{deviceId}에서 상태를 "cancel"로 업데이트
         const ticketRef = doc(db, "store", storeCode, "tickets", deviceId);
   
-        // 트랜잭션을 사용하여 두 문서를 동시에 업데이트
+        // 트랜잭션을 사용하여 두 문서를 동시에 업데이트 및 삭제
         const batch = writeBatch(db);
         
         // users/{deviceId}에서 상태를 "cancel"로 업데이트
@@ -64,13 +64,16 @@ export default function MyTicket({ deviceId }) {
         
         // store/{storeCode}/tickets/{deviceId}에서 상태를 "cancel"로 업데이트
         batch.update(ticketRef, { state: "cancel" });
-  
-        // 배치 실행
+
+        // Firestore 배치 업데이트 후 users/{deviceId} 문서 삭제
         await batch.commit();
-  
+        await deleteDoc(userRef); // 문서 삭제
+
         // 로컬 상태 업데이트
-        setState("cancel");
-        console.log("대기표 취소 완료");
+        setMyTicketNumber(null); // 번호표 제거
+        setPersonnel(null); // 인원 수 초기화
+        setState(null); // 상태 초기화
+        console.log("대기표 취소 및 사용자 문서 삭제 완료");
       } else {
         console.log("사용자 정보가 없습니다.");
       }
