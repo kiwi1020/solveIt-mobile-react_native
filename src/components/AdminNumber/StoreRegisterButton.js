@@ -33,7 +33,7 @@ const StoreRegisterButton = ({ navigation, route }) => {
           // 파일이 존재하면 imageExists를 true로 설정
           setImageExists(true);
         } catch (error) {
-          console.error("Error checking image existence:", error); // 오류 출력
+          console.log("Image does not exist");
           setImageExists(false); // 이미지가 없으면 false
         } finally {
           setLoading(false);

@@ -9,7 +9,7 @@ import StoreTicketList from './StoreTicketList';
 
 const Stack = createStackNavigator();
 
-const StoreTicketStack = () => (
+const StoreTicketStack = ({ deviceId }) => (
   <Stack.Navigator 
   initialRouteName="StoreTicketList"
   screenOptions={{
@@ -17,8 +17,12 @@ const StoreTicketStack = () => (
   }}
   >
     <Stack.Screen name="StoreTicketStack" component={StoreTicketStack} options={{ title: '게시글 목록' }} />
-    <Stack.Screen name="StoreTicketList" component={StoreTicketList} options={{ title: '가게 번호 목록' }} />
-
+    {() => <StoreTicketList deviceId={deviceId} />}<Stack.Screen 
+      name="StoreTicketList" 
+      options={{ title: "가게 번호 목록" }}
+    >
+      {() => <StoreTicketList deviceId={deviceId} />}
+    </Stack.Screen>
 
   </Stack.Navigator>
 );
