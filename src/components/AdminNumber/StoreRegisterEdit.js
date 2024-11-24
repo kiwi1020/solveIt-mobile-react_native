@@ -22,7 +22,7 @@ import {
 
 const StoreRegisterEdit = ({ route }) => {
   const [storeName, setStoreName] = useState("");
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]); // 이미지 여러 개 저장
   const { deviceId, action } = route.params; // action 값 가져오기
 
   let app;
@@ -34,18 +34,64 @@ const StoreRegisterEdit = ({ route }) => {
   const storage = getStorage(app); // Firebase Storage 참조
   const db = getFirestore(app);
 
+  // store 정보 가져오기 (useEffect)
+  useEffect(() => {
+    const fetchStoreData = async () => {
+      const docRef = doc(db, "store", deviceId); // Firestore에서 가게 정보 가져오기
+      const docSnap = await getDoc(docRef);
+  
+      if (docSnap.exists()) {
+        const storeData = docSnap.data();
+        setStoreName(storeData.name);
+  
+        // Firestore에서 가져온 이미지 URL을 React Native Image 컴포넌트에서 사용할 수 있는 형식으로 변환
+        const formattedImages = (storeData.images || []).map((url) => ({
+          uri: url,
+        }));
+        setImages(formattedImages); // 기존 이미지 URL로 초기화
+      } else {
+        console.log("No such document!");
+      }
+    };
+    fetchStoreData();
+  }, [deviceId]);
+
   // 이미지 선택 함수
-  const pickImage = async () => {
+  const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      allowsMultipleSelection: true, // 여러 이미지 선택
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0]);
+      setImages(result.assets);
     }
+  };
+
+  // 이미지 업로드 함수
+  const uploadImages = async () => {
+    const imageUrls = [];
+
+    for (let i = 0; i < images.length; i++) {
+      const uri = images[i].uri;
+      const fileNameArray = uri.split("/");
+      const fileName = fileNameArray[fileNameArray.length - 1]; // 파일 이름 추출
+      const storageRef = ref(storage, `store_images/${deviceId}/${fileName}`);
+
+      // 파일 업로드
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      await uploadBytes(storageRef, blob); // 이미지 업로드
+
+      // 업로드 완료 후 다운로드 URL 가져오기
+      const downloadURL = await getDownloadURL(storageRef);
+      imageUrls.push(downloadURL);
+    }
+
+    return imageUrls;
   };
 
   // 등록 버튼 클릭 시 동작
@@ -55,30 +101,18 @@ const StoreRegisterEdit = ({ route }) => {
       return;
     }
 
-    if (!image) {
+    if (images.length === 0) {
       alert("이미지를 업로드해주세요.");
       return;
     }
 
     try {
-      const uri = image.uri;
-      const fileNameArray = uri.split("/");
-      const fileName = fileNameArray[fileNameArray.length - 1]; // 파일 이름 추출
-      const storageRef = ref(storage, `store_images/${deviceId}/profile`);
-
-      // 파일 업로드
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      await uploadBytes(storageRef, blob); // 이미지 업로드
-
-      // 업로드 완료 후 다운로드 URL 가져오기
-      const downloadURL = await getDownloadURL(storageRef);
-      console.log("파일 업로드 성공:", downloadURL);
+      const imageUrls = await uploadImages();
 
       const docRef = doc(db, "store", deviceId);
       await setDoc(docRef, {
         name: storeName,
-        image: downloadURL,
+        images: imageUrls, // 여러 이미지 URL을 저장
         storeCode: deviceId,
         nextNumber: 0,
       });
@@ -97,32 +131,18 @@ const StoreRegisterEdit = ({ route }) => {
       return;
     }
 
-    // 수정 로직 (예: 이미 등록된 가게 이름이나 이미지 업데이트)
     try {
-      const uri = image.uri;
-      const fileNameArray = uri.split("/");
-      const fileName = fileNameArray[fileNameArray.length - 1]; // 파일 이름 추출
-      const storageRef = ref(storage, `store_images/${deviceId}/profile`);
+      const imageUrls = await uploadImages();
 
-      // 파일 업로드
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      await uploadBytes(storageRef, blob); // 이미지 업로드
-
-      // 업로드 완료 후 다운로드 URL 가져오기
-      const downloadURL = await getDownloadURL(storageRef);
-      console.log("파일 업로드 성공:", downloadURL);
-      
       const docRef = doc(db, "store", deviceId);
-      await setDoc(docRef, {
+      await updateDoc(docRef, {
         name: storeName,
-        image: downloadURL,
+        images: imageUrls, // 여러 이미지 URL을 업데이트
         storeCode: deviceId,
         nextNumber: 0,
       });
-      
+
       alert("가게 정보가 성공적으로 수정되었습니다!");
-      // 수정된 정보 저장 로직 추가 (예: API 호출)
     } catch (error) {
       console.error("가게 수정 실패:", error);
       alert("가게 수정에 실패했습니다. 다시 시도해주세요.");
@@ -146,9 +166,11 @@ const StoreRegisterEdit = ({ route }) => {
       />
 
       <Text style={styles.label}>가게 이미지</Text>
-      <TouchableOpacity style={styles.imageUpload} onPress={pickImage}>
-        {image ? (
-          <Image source={{ uri: image.uri }} style={styles.image} />
+      <TouchableOpacity style={styles.imageUpload} onPress={pickImages}>
+        {images.length > 0 ? (
+          images.map((image, index) => (
+            <Image key={index} source={{ uri: image.uri }} style={styles.image} />
+          ))
         ) : (
           <Text style={styles.uploadText}>이미지 업로드</Text>
         )}
@@ -165,36 +187,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#fff",
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
     marginBottom: 8,
   },
   input: {
-    borderWidth: 1,
+    height: 40,
     borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
+    borderWidth: 1,
     marginBottom: 20,
+    paddingLeft: 8,
   },
   imageUpload: {
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 8,
+    padding: 10,
     marginBottom: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  image: {
+    width: 100,
+    height: 100,
+    margin: 5,
   },
   uploadText: {
     color: "#888",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 8,
+    fontSize: 14,
   },
   buttonContainer: {
     marginTop: 20,
