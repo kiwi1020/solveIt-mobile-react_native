@@ -79,7 +79,7 @@ const StoreRegisterEdit = ({ route }) => {
       const uri = images[i].uri;
       const fileNameArray = uri.split("/");
       const fileName = fileNameArray[fileNameArray.length - 1]; // 파일 이름 추출
-      const storageRef = ref(storage, `store_images/${deviceId}/${fileName}`);
+      const storageRef = ref(storage, `store_images/${deviceId}/profile/${fileName}`);
 
       // 파일 업로드
       const response = await fetch(uri);

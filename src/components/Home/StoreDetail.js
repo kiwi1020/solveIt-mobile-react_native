@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button, FlatList, Image, Dimensions } from "react-native";
 import firebaseApp from "../../firebase/firebaseConfig";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-
+import { getFirestore, doc, getDoc, collection } from "firebase/firestore";
+import { runTransaction } from "firebase/firestore";
 const db = getFirestore(firebaseApp);
 
 export default function StoreDetail({ route }) {
