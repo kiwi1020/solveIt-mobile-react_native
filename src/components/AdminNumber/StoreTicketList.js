@@ -48,39 +48,74 @@ export default function StoreTicketList({ deviceId }) {
   };
 
   const handleCancel = async (ticketId, deviceId) => {
-    try {
-      const storeCode = deviceId;
-      setLoading(true);
-  
-      // 트랜잭션을 사용하여 Firestore에서 대기표 상태를 변경
-      await runTransaction(db, async (transaction) => {
-        const ticketRef = doc(db, "store", storeCode, "tickets", ticketId); // 해당 대기표 문서 참조
-        const ticketDoc = await transaction.get(ticketRef);
-  
-        if (!ticketDoc.exists()) {
-          throw new Error("대기표가 존재하지 않습니다.");
-        }
-  
-        // 대기표 상태를 'cancel'로 업데이트
-        transaction.update(ticketRef, {
-          state: "cancel",
-        });
-  
-        // 사용자 상태도 'cancel'로 업데이트
-        const userRef = doc(db, "users", ticketId); // 사용자의 대기표 정보 업데이트
-        transaction.update(userRef, {
-          state: "cancel",
-        });
+  try {
+    const storeCode = deviceId;
+    setLoading(true);
+
+    // 트랜잭션에서 모든 읽기 작업이 완료된 후 쓰기 작업 수행
+    await runTransaction(db, async (transaction) => {
+      const ticketRef = doc(db, "store", storeCode, "tickets", ticketId); // 대기표 문서 참조
+      const userRef = doc(db, "users", ticketId); // 사용자 문서 참조
+
+      // 대기표 문서 읽기
+      const ticketDoc = await transaction.get(ticketRef);
+      if (!ticketDoc.exists()) {
+        throw new Error("대기표가 존재하지 않습니다.");
+      }
+
+      // 사용자 문서 읽기
+      const userDoc = await transaction.get(userRef);
+
+      // 모든 읽기 작업 완료 후 쓰기 작업 수행
+      transaction.update(ticketRef, {
+        state: "cancel",
       });
+
+      if (userDoc.exists()) {
+        transaction.delete(userRef);
+      } else {
+        console.log(`User document with ID ${ticketId} does not exist.`);
+      }
+    });
+
+    console.log(`Ticket ${ticketId} has been cancelled and user document deleted.`);
+  } catch (error) {
+    console.error("Error cancelling ticket: ", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleComplete = async (ticketId, deviceId) => {
+  try {
+    const storeCode = deviceId;
+    setLoading(true);
+
+    // Firestore 트랜잭션으로 상태값을 'complete'로 변경
+    await runTransaction(db, async (transaction) => {
+      const ticketRef = doc(db, "store", storeCode, "tickets", ticketId); // 대기표 문서 참조
+
+      // 대기표 문서 읽기
+      const ticketDoc = await transaction.get(ticketRef);
+      if (!ticketDoc.exists()) {
+        throw new Error("대기표가 존재하지 않습니다.");
+      }
+
+      // 상태값을 'complete'로 업데이트
+      transaction.update(ticketRef, {
+        state: "complete",
+      });
+    });
+
+    console.log(`Ticket ${ticketId} has been marked as complete.`);
+  } catch (error) {
+    console.error("Error completing ticket: ", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
   
-      console.log(`Ticket ${ticketId} has been cancelled.`);
-  
-    } catch (error) {
-      console.error("Error cancelling ticket: ", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -105,6 +140,13 @@ export default function StoreTicketList({ deviceId }) {
                   <Text style={styles.buttonText}>호출</Text>
                 </TouchableOpacity>
                 
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleComplete(item.id, deviceId)}
+                >
+                  <Text style={styles.buttonText}>완료</Text>
+                </TouchableOpacity>
+
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => handleCancel(item.id, deviceId)}

@@ -60,7 +60,7 @@ const StoreRegisterEdit = ({ route }) => {
   const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      // allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
       allowsMultipleSelection: true, // 여러 이미지 선택
