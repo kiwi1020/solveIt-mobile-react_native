@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import firebaseApp from "../../firebase/firebaseConfig";
 import { getFirestore, collection, query, onSnapshot, runTransaction, doc  } from "firebase/firestore";
-
+import { LinearGradient } from 'expo-linear-gradient';
 const db = getFirestore(firebaseApp);
 
 export default function StoreTicketList({ deviceId }) {
@@ -108,7 +108,13 @@ export default function StoreTicketList({ deviceId }) {
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient 
+      style={styles.container} 
+      colors={['#BFC0D6', '#CBBCD8']}
+      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
+      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
+>
+    <View >
       <View style={styles.headerContainer}>
         <Text style={styles.header}>대기표 목록</Text>
         <Text style={styles.teamCount}>대기 팀 수: {waitingTickets.length}</Text>
@@ -164,6 +170,7 @@ export default function StoreTicketList({ deviceId }) {
         <Text style={styles.noTickets}>현재 대기표가 없습니다.</Text>
       )}
     </View>
+    </LinearGradient>
   );
 }
 
@@ -172,7 +179,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#6661D5",
   },
   headerContainer: {
     flexDirection: "row",

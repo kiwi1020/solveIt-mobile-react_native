@@ -11,6 +11,7 @@ import { getApps, initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../firebase/firebaseConfig";
 import { useFocusEffect } from "@react-navigation/native";
 import { deleteDoc, doc, getFirestore, collection, getDocs } from "firebase/firestore";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const StoreRegisterButton = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
@@ -109,7 +110,13 @@ const StoreRegisterButton = ({ navigation, route }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <LinearGradient 
+      style={styles.container} 
+      colors={['#BFC0D6', '#CBBCD8']}
+      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
+      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
+>
+    <View>
       {imageExists ? (
         <>
           <Button
@@ -135,13 +142,16 @@ const StoreRegisterButton = ({ navigation, route }) => {
         />
       )}
     </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#6661D5",
   },
   loader: {
     flex: 1,

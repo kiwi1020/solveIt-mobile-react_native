@@ -3,6 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Button, FlatList, Image, Dime
 import firebaseApp from "../../firebase/firebaseConfig";
 import { getFirestore, doc, getDoc, collection } from "firebase/firestore";
 import { runTransaction } from "firebase/firestore";
+import { LinearGradient } from 'expo-linear-gradient';
+
+
 const db = getFirestore(firebaseApp);
 
 export default function StoreDetail({ route }) {
@@ -113,7 +116,13 @@ export default function StoreDetail({ route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient 
+      style={styles.container} 
+      colors={['#BFC0D6', '#CBBCD8']}
+      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
+      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
+>
+    <View >
       <FlatList
         data={storeImages}
         horizontal
@@ -148,6 +157,7 @@ export default function StoreDetail({ route }) {
         </Text>
       )}
     </View>
+    </LinearGradient>
   );
 }
 

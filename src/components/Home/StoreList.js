@@ -5,6 +5,8 @@ import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getApps, initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../firebase/firebaseConfig";
 import { ScrollView, Image } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
+import { StyleSheet } from "react-native";
 
 const Container = styled.View`
   flex: 1;
@@ -12,6 +14,13 @@ const Container = styled.View`
   background-color: #f9f9f9;
 `;
 
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ffffff',
+    flex: 1,
+    padding: "20",
+    
+}});
 const StoreCard = styled.TouchableOpacity`
   background-color: #fff;
   padding: 15px;
@@ -77,7 +86,13 @@ const StoreList = ({ route }) => {
   };
 
   return (
-    <Container>
+    // <Container>
+      <LinearGradient 
+      style={styles.container} 
+      colors={['#BFC0D6', '#CBBCD8']}
+      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
+      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
+>
       {/* 전체 화면을 ScrollView로 감싸기 */}
       <ScrollView>
         {stores.map((store) => (
@@ -99,7 +114,8 @@ const StoreList = ({ route }) => {
           </StoreCard>
         ))}
       </ScrollView>
-    </Container>
+      </LinearGradient>
+    // </Container>
   );
 };
 

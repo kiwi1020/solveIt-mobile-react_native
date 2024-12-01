@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
 import TabNavigation from "./components/Tab";
 import AdminTabNavigation from "./components/AdminTab";
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function App() {
   const [deviceId, setDeviceId] = useState(""); // UUID 상태 초기화
@@ -64,6 +65,13 @@ export default function App() {
   // 역할 선택 화면
   if (!selectedRole) {
     return (
+      <LinearGradient 
+      style={styles.container} 
+      colors={['#BFC0D6', '#CBBCD8']}
+      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
+      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
+>
+
       <View style={styles.roleSelectionContainer}>
         <TouchableOpacity
           style={[styles.button, !isValid && styles.disabledButton]} // 비활성화 스타일 추가
@@ -90,6 +98,8 @@ export default function App() {
         />
         {!isValid && <Text style={styles.errorText}>유효한 UUID를 입력해주세요.</Text>}
       </View>
+      </LinearGradient>
+
     );
   }
 
@@ -108,6 +118,12 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ffffff',
+    flex: 1,
+    justifyContent:"center",
+    alignItems:"center",
+},
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -122,7 +138,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#6661D5",
   },
   button: {
     backgroundColor: "#fff",

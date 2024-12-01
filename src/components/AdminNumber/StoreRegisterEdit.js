@@ -19,6 +19,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const StoreRegisterEdit = ({ route }) => {
   const [storeName, setStoreName] = useState("");
@@ -154,6 +155,12 @@ const StoreRegisterEdit = ({ route }) => {
   const handleButtonPress = action === "edit" ? handleEdit : handleRegister;
 
   return (
+    <LinearGradient 
+      style={styles.container} 
+      colors={['#BFC0D6', '#CBBCD8']}
+      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
+      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
+>
     <View style={styles.container}>
       <Text style={styles.label}>
         {action === "edit" ? "가게 정보 수정" : "가게 등록"}
@@ -180,6 +187,7 @@ const StoreRegisterEdit = ({ route }) => {
         <Button title={buttonTitle} onPress={handleButtonPress} />
       </View>
     </View>
+    </LinearGradient>
   );
 };
 

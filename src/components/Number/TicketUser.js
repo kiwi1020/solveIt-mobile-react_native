@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import firebaseApp from "../../firebase/firebaseConfig";
 import { getFirestore, doc, getDoc, updateDoc, writeBatch, deleteDoc } from "firebase/firestore";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const db = getFirestore(firebaseApp);
 
@@ -91,7 +92,13 @@ export default function MyTicket({ deviceId }) {
   }
 
   return (
-    <View style={styles.container}>
+    <LinearGradient 
+      style={styles.container} 
+      colors={['#BFC0D6', '#CBBCD8']}
+      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
+      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
+>
+    <View >
       {myTicketNumber ? (
         <>
           <Text style={styles.text}>내 대기표 번호: {myTicketNumber}</Text>
@@ -107,6 +114,7 @@ export default function MyTicket({ deviceId }) {
         <Text style={styles.text}>현재 대기표가 없습니다.</Text>
       )}
     </View>
+    </LinearGradient>
   );
 }
 
@@ -115,7 +123,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#6661D5",
   },
   text: {
     fontSize: 20,
