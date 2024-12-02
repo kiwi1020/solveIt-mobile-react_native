@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useRef  } from "react";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, Platform } from "react-native";
 import firebaseApp from "../../firebase/firebaseConfig";
 import { getFirestore, collection, query, onSnapshot, runTransaction, doc  } from "firebase/firestore";
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Notifications from "expo-notifications";
 const db = getFirestore(firebaseApp);
+
+// 푸시 알림 핸들러 설정
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function StoreTicketList({ deviceId }) {
   const [tickets, setTickets] = useState([]); // 대기표 데이터 상태 저장
   const [loading, setLoading] = useState(true); // 로딩 상태
 
+  const [notification, setNotification] = useState(null);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
   useEffect(() => {
     const storeCode = deviceId;
     const ticketsRef = collection(db, "store", storeCode, "tickets"); // 하위 컬렉션 경로
     const q = query(ticketsRef);
-
     const unsubscribe = onSnapshot(
       q,
       (querySnapshot) => {
@@ -28,9 +41,38 @@ export default function StoreTicketList({ deviceId }) {
         console.error("Failed to fetch tickets: ", error);
       }
     );
-
+    
     return () => unsubscribe(); // 컴포넌트 언마운트 시 구독 해제
   }, [deviceId]);
+
+  useEffect(() => {
+    
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+    
+    const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+      console.log("푸시 알림 수신:", notification);
+      setNotification(notification); // 알림을 상태에 저장
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log("푸시 알림 응답:", response);  // 알림 응답 여부 확인
+      console.log(response);
+    });
+
+    return () => {
+      notificationListener.current &&
+        Notifications.removeNotificationSubscription(notificationListener.current);
+      responseListener.current &&
+        Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -42,8 +84,38 @@ export default function StoreTicketList({ deviceId }) {
 
   const waitingTickets = tickets.filter((ticket) => ticket.state === "waiting");
 
-  const handleCall = (ticketId) => {
-    console.log(`Calling ticket ID: ${ticketId}`);
+  const handleCall = async(expoPushToken) => {
+    if (!expoPushToken) {
+      Alert.alert("푸시 토큰이 없습니다.");
+      return;
+    }
+
+    const message = {
+      to: expoPushToken,
+      sound: "default",
+      title: "테스트 알림",
+      body: "Expo 환경에서 푸시 알림 전송 성공!",
+      data: { additionalData: "테스트 데이터" },
+    };
+
+    try {
+      const response = await fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          'Accept-encoding': 'gzip, deflate',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(message),
+      });
+
+      const result = await response.json();
+      console.log("푸시 알림 전송 성공:", result);
+      Alert.alert("푸시 알림 전송 성공!");
+    } catch (error) {
+      console.error("푸시 알림 전송 실패:", error);
+      Alert.alert("푸시 알림 전송 실패:", error.message);
+    }
   };
 
   const handleCancel = async (ticketId, deviceId) => {
@@ -136,7 +208,7 @@ export default function StoreTicketList({ deviceId }) {
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity
                       style={styles.button}
-                      onPress={() => handleCall(item.id)}
+                      onPress={() => handleCall(item.expoPushToken)}
                     >
                       <Text style={styles.buttonText}>호출</Text>
                     </TouchableOpacity>

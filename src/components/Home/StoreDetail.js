@@ -14,7 +14,7 @@ export default function StoreDetail({ route }) {
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [canDrawTicket, setCanDrawTicket] = useState(true); // 대기표 뽑기 가능 여부
   const [storeImages, setStoreImages] = useState([]); // 가게 이미지 배열 저장
-  const { storeCode, deviceId } = route.params; // storeCode는 가게 UUID이고 deviceId는 사용자 UUID임
+  const { storeCode, deviceId, expoPushToken } = route.params; // storeCode는 가게 UUID이고 deviceId는 사용자 UUID임
 
   // 화면의 크기를 얻어 슬라이드 이미지 크기 설정
   const { width } = Dimensions.get('window');
@@ -81,6 +81,7 @@ export default function StoreDetail({ route }) {
           number: nextNumber,
           state: "waiting",
           personnel: personnel,
+          expoPushToken: expoPushToken,
         }, { merge: true });
 
         // 대기표 저장
@@ -89,6 +90,7 @@ export default function StoreDetail({ route }) {
           number: nextNumber,
           state: "waiting",
           personnel: personnel,
+          expoPushToken: expoPushToken
         });
 
         return nextNumber;

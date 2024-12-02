@@ -48,7 +48,7 @@ const ImageContainer = styled.View`
 const StoreList = ({ route }) => {
   const navigation = useNavigation();
   const [stores, setStores] = useState([]);
-  const deviceId = route.params.deviceId;
+  const {deviceId, expoPushToken} = route.params;
 
   // Firebase 앱 초기화
   let app;
@@ -78,10 +78,11 @@ const StoreList = ({ route }) => {
     fetchStores();
   }, []);
 
-  const navigateToDetail = (storeCode, deviceId) => {
+  const navigateToDetail = (storeCode, deviceId, expoPushToken) => {
     navigation.navigate("StoreDetail", {
       storeCode: storeCode,
       deviceId: deviceId,
+      expoPushToken: expoPushToken,
     });
   };
 
@@ -96,7 +97,7 @@ const StoreList = ({ route }) => {
       {/* 전체 화면을 ScrollView로 감싸기 */}
       <ScrollView>
         {stores.map((store) => (
-          <StoreCard key={store.id} onPress={() => navigateToDetail(store.storeCode, deviceId)}>
+          <StoreCard key={store.id} onPress={() => navigateToDetail(store.storeCode, deviceId, expoPushToken)}>
             <StoreName>{store.name}</StoreName>
 
             {/* 첫 번째 이미지만 오른쪽에 배치 */}

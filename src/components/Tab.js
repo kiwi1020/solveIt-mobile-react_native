@@ -9,7 +9,7 @@ import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
-const TabNavigation = ({ deviceId, setSelectedRole  }) => {
+const TabNavigation = ({ deviceId, setSelectedRole, expoPushToken }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -45,7 +45,7 @@ const TabNavigation = ({ deviceId, setSelectedRole  }) => {
         )}
       </Tab.Screen>
       <Tab.Screen name="홈">
-        {() => <UserListStack deviceId={deviceId} />}
+        {() => <UserListStack deviceId={deviceId} expoPushToken={expoPushToken}/>}
       </Tab.Screen>
       <Tab.Screen name="번호표">
         {() => <TicketUserStack deviceId={deviceId} />}
