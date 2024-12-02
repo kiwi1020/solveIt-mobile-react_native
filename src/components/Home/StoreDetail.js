@@ -15,6 +15,7 @@ export default function StoreDetail({ route }) {
   const [canDrawTicket, setCanDrawTicket] = useState(true); // 대기표 뽑기 가능 여부
   const [storeImages, setStoreImages] = useState([]); // 가게 이미지 배열 저장
   const { storeCode, deviceId, expoPushToken } = route.params; // storeCode는 가게 UUID이고 deviceId는 사용자 UUID임
+  const [storeName, setStoreName] = useState(""); // 가게 이름 상태
 
   // 화면의 크기를 얻어 슬라이드 이미지 크기 설정
   const { width } = Dimensions.get('window');
@@ -52,6 +53,24 @@ export default function StoreDetail({ route }) {
       }
     };
 
+    const fetchStoreName = async () => {
+      try {
+        const storeRef = doc(db, "store", storeCode); // storeCode에 해당하는 문서 참조
+        const storeDoc = await getDoc(storeRef); // 문서 가져오기
+  
+        if (storeDoc.exists()) {
+          const storeData = storeDoc.data(); // 문서 데이터
+          setStoreName(storeData.name || ""); // 가게 이름 설정
+        } else {
+          console.error("가게 문서를 찾을 수 없습니다.");
+        }
+      } catch (error) {
+        console.error("가게 이름 가져오기 오류:", error);
+      }
+    };
+    fetchStoreName(); // 가게 이름 가져오기 호출
+
+
     fetchStoreImages();
   }, [deviceId, storeCode]);
 
@@ -61,7 +80,7 @@ export default function StoreDetail({ route }) {
       setLoading(true);
 
       // Firestore 트랜잭션 실행
-      const nextNumber = await runTransaction(db, async (transaction) => {
+        const nextNumber = await runTransaction(db, async (transaction) => {
         const storeRef = doc(db, "store", storeCode);
 
         // 현재 대기표 번호 가져오기
@@ -107,6 +126,8 @@ export default function StoreDetail({ route }) {
     }
   };
 
+
+
   // 인원 추가
   const increasePersonnel = () => {
     setPersonnel((prev) => prev + 1);
@@ -137,12 +158,26 @@ export default function StoreDetail({ route }) {
         )}
         style={styles.flatList} // FlatList 전체 크기 제한
       />
-      <Text style={styles.header}>대기표 뽑기</Text>
+      <View style={styles.nameContainer}>
+
+      <Text style={styles.storeName}>{storeName}</Text>
+
+      </View>
+
+      <View style={styles.textContainer}>
+
+        <Text style={styles.header}>인원 수</Text>
+
+      </View>
+
       <View style={styles.counterContainer}>
+
         <TouchableOpacity style={styles.button} onPress={decreasePersonnel}>
           <Text style={styles.buttonText}>-</Text>
         </TouchableOpacity>
+
         <Text style={styles.counter}>{personnel}</Text>
+
         <TouchableOpacity style={styles.button} onPress={increasePersonnel}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
@@ -166,20 +201,46 @@ export default function StoreDetail({ route }) {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    alignItems: "center",
-    justifyContent: "center",
+    
     backgroundColor: "#6661D5",
   },
+  flatList: {
+    maxHeight: 200, // FlatList 전체 높이 제한
+    
+    marginTop: 30,
+  },
+  nameContainer:{
+    marginTop: 10,
+    alignItems: "left", // 가로 축 중앙 정렬
+    marginLeft: 30,
+
+  },
+  storeName:{
+    fontWeight: "bold",
+    fontSize: 25,
+    color: '#FFFFFF'
+  },
+  textContainer: {
+    alignItems: "center", // 가로 축 중앙 정렬
+    justifyContent: "center", // 세로 축 중앙 정렬
+    width: '100%', // 부모 컨테이너에 맞게 너비 설정
+    marginBottom: 20, // 아래 간격 추가
+  },
   header: {
-    fontSize: 30,
+    marginTop:30,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#fff",
+    textAlign: "center", // 텍스트 자체 중앙 정렬
+
   },
   counterContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "row", // 아이템을 가로로 배치
+    alignItems: "center", // 세로 축 중앙 정렬
+    justifyContent: "center", // 가로 축 중앙 정렬
     marginBottom: 20,
+    width: '100%', // 부모 요소 기준으로 중앙 정렬되도록 설정
   },
   button: {
     padding: 10,
@@ -194,6 +255,7 @@ const styles = StyleSheet.create({
   counter: {
     fontSize: 18,
     fontWeight: "bold",
+    
   },
   ticketInfo: {
     marginTop: 20,
@@ -206,8 +268,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 10, // 이미지 간격 설정
     borderRadius: 10,
   },
-  flatList: {
-    maxHeight: 200, // FlatList 전체 높이 제한
-    marginBottom: 50, // 간격 조정
-  },
+  
 });
