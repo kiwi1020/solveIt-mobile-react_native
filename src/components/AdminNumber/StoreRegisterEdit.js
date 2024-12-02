@@ -19,7 +19,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 
 const StoreRegisterEdit = ({ route }) => {
   const [storeName, setStoreName] = useState("");
@@ -40,11 +40,11 @@ const StoreRegisterEdit = ({ route }) => {
     const fetchStoreData = async () => {
       const docRef = doc(db, "store", deviceId); // Firestore에서 가게 정보 가져오기
       const docSnap = await getDoc(docRef);
-  
+
       if (docSnap.exists()) {
         const storeData = docSnap.data();
         setStoreName(storeData.name);
-  
+
         // Firestore에서 가져온 이미지 URL을 React Native Image 컴포넌트에서 사용할 수 있는 형식으로 변환
         const formattedImages = (storeData.images || []).map((url) => ({
           uri: url,
@@ -80,7 +80,10 @@ const StoreRegisterEdit = ({ route }) => {
       const uri = images[i].uri;
       const fileNameArray = uri.split("/");
       const fileName = fileNameArray[fileNameArray.length - 1]; // 파일 이름 추출
-      const storageRef = ref(storage, `store_images/${deviceId}/profile/${fileName}`);
+      const storageRef = ref(
+        storage,
+        `store_images/${deviceId}/profile/${fileName}`
+      );
 
       // 파일 업로드
       const response = await fetch(uri);
@@ -155,38 +158,45 @@ const StoreRegisterEdit = ({ route }) => {
   const handleButtonPress = action === "edit" ? handleEdit : handleRegister;
 
   return (
-    <LinearGradient 
-      style={styles.container} 
-      colors={['#BFC0D6', '#CBBCD8']}
-      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
-      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
->
-    <View style={styles.container}>
-      <Text style={styles.label}>
-        {action === "edit" ? "가게 정보 수정" : "가게 등록"}
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="가게 이름을 입력하세요"
-        value={storeName}
-        onChangeText={setStoreName}
-      />
+    <LinearGradient
+      style={styles.container}
+      colors={["#BFC0D6", "#CBBCD8"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0.5, y: 0 }}
+    >
+      <View style={styles.content}>
+        <Text style={styles.header}>
+          {action === "edit" ? "가게 정보 수정" : "가게 등록"}
+        </Text>
 
-      <Text style={styles.label}>가게 이미지</Text>
-      <TouchableOpacity style={styles.imageUpload} onPress={pickImages}>
-        {images.length > 0 ? (
-          images.map((image, index) => (
-            <Image key={index} source={{ uri: image.uri }} style={styles.image} />
-          ))
-        ) : (
-          <Text style={styles.uploadText}>이미지 업로드</Text>
-        )}
-      </TouchableOpacity>
+        <TextInput
+          style={styles.input}
+          placeholder="가게 이름을 입력하세요"
+          value={storeName}
+          onChangeText={setStoreName}
+        />
 
-      <View style={styles.buttonContainer}>
-        <Button title={buttonTitle} onPress={handleButtonPress} />
+        <Text style={styles.label}>가게 이미지</Text>
+        <TouchableOpacity style={styles.imageUpload} onPress={pickImages}>
+          {images.length > 0 ? (
+            images.map((image, index) => (
+              <Image
+                key={index}
+                source={{ uri: image.uri }}
+                style={styles.image}
+              />
+            ))
+          ) : (
+            <Text style={styles.uploadText}>이미지 업로드</Text>
+          )}
+        </TouchableOpacity>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
+            <Text style={styles.buttonText}>{buttonTitle}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
     </LinearGradient>
   );
 };
@@ -194,41 +204,81 @@ const StoreRegisterEdit = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 20,
+    justifyContent: "center",
+    backgroundColor: "#F4F7FC", // 부드러운 배경색
+  },
+  content: {
     padding: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.8)", // 살짝 투명한 배경
+    borderRadius: 15,
+    elevation: 5, // 그림자 효과
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#3E4A59", // 고급스러운 텍스트 색상
+    marginBottom: 20,
+    textAlign: "center",
   },
   label: {
     fontSize: 16,
+    fontWeight: "600",
+    color: "#4A4A4A", // 부드러운 텍스트 색상
     marginBottom: 8,
   },
   input: {
-    height: 40,
-    borderColor: "#ccc",
+    height: 50,
+    borderColor: "#D1D5DB", // 더 부드러운 회색
     borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 15,
     marginBottom: 20,
-    paddingLeft: 8,
+    backgroundColor: "#fff",
+    fontSize: 16,
   },
   imageUpload: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
+    borderColor: "#D1D5DB",
+    borderRadius: 10,
+    padding: 15,
     marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
+    backgroundColor: "#F9F9F9", // 부드러운 배경색
   },
   image: {
     width: 100,
     height: 100,
     margin: 5,
+    borderRadius: 10,
   },
   uploadText: {
-    color: "#888",
+    color: "#6B7280",
     fontSize: 14,
   },
   buttonContainer: {
     marginTop: 20,
+    borderRadius: 10,
+    overflow: "hidden", // 버튼의 둥근 모서리 효과를 위한 overflow
+    backgroundColor: "#fff",
+  },
+  button: {
+    backgroundColor: "#fff", 
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginBottom: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 3, // 그림자 효과
+  },
+  buttonText: {
+    color: "6661D5",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  buttonHovered: {
+    backgroundColor: "#3A56E3", // 마우스 오버 효과 (터치 이벤트로 대체)
   },
 });
-
 export default StoreRegisterEdit;

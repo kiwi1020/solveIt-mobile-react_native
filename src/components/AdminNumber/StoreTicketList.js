@@ -94,7 +94,7 @@ export default function StoreTicketList({ deviceId }) {
       to: expoPushToken,
       sound: "default",
       title: "테스트 알림",
-      body: "Expo 환경에서 푸시 알림 전송 성공!",
+      body: "대기표가 호출 되었습니다!",
       data: { additionalData: "테스트 데이터" },
     };
 
@@ -185,63 +185,62 @@ export default function StoreTicketList({ deviceId }) {
       colors={['#BFC0D6', '#CBBCD8']}
       start={{ x: 0, y: 0 }} // 왼쪽에서 시작
       end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
->
-    <View >
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>대기표 목록</Text>
-        <Text style={styles.teamCount}>대기 팀 수: {waitingTickets.length}</Text>
+    >
+      <View style={styles.content}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>대기표 목록</Text>
+          <Text style={styles.teamCount}>대기 팀 수: {waitingTickets.length}</Text>
+        </View>
+        {tickets.length > 0 ? (
+          <FlatList
+            data={tickets}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => {
+              const isDisabled = item.state === "complete" || item.state === "cancel";
+              return (
+                <View style={styles.ticketItem}>
+                  <Text style={styles.ticketText}>번호: {item.number}</Text>
+                  <Text style={styles.ticketText}>인원: {item.personnel}명</Text>
+                  <Text style={styles.ticketText}>상태: {item.state}</Text>
+  
+                  {!isDisabled ? (
+                    <View style={styles.buttonContainer}>
+                      <TouchableOpacity
+                        style={[styles.button, styles.callButton]}
+                        onPress={() => handleCall(item.expoPushToken)}
+                      >
+                        <Text style={styles.buttonText}>호출</Text>
+                      </TouchableOpacity>
+  
+                      <TouchableOpacity
+                        style={[styles.button, styles.completeButton]}
+                        onPress={() => handleComplete(item.id, deviceId)}
+                      >
+                        <Text style={styles.buttonText}>완료</Text>
+                      </TouchableOpacity>
+  
+                      <TouchableOpacity
+                        style={[styles.button, styles.cancelButton]}
+                        onPress={() => handleCancel(item.id, deviceId)}
+                      >
+                        <Text style={styles.buttonText}>취소</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View style={styles.overlay}>
+                      <Text style={styles.overlayText}>
+                        {item.state === "complete" ? "완료된 항목" : "취소된 항목"}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              );
+            }}
+          />
+        ) : (
+          <Text style={styles.noTickets}>현재 대기표가 없습니다.</Text>
+        )}
       </View>
-      {tickets.length > 0 ? (
-        <FlatList
-          data={tickets}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
-            const isDisabled = item.state === "complete" || item.state === "cancel";
-
-            return (
-              <View style={styles.ticketItem}>
-                <Text style={styles.ticketText}>번호: {item.number}</Text>
-                <Text style={styles.ticketText}>인원: {item.personnel}명</Text>
-                <Text style={styles.ticketText}>상태: {item.state}</Text>
-
-                {!isDisabled ? (
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => handleCall(item.expoPushToken)}
-                    >
-                      <Text style={styles.buttonText}>호출</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => handleComplete(item.id, deviceId)}
-                    >
-                      <Text style={styles.buttonText}>완료</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => handleCancel(item.id, deviceId)}
-                    >
-                      <Text style={styles.buttonText}>취소</Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View style={styles.overlay}>
-                    <Text style={styles.overlayText}>
-                      {item.state === "complete" ? "완료된 항목" : "취소된 항목"}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            );
-          }}
-        />
-      ) : (
-        <Text style={styles.noTickets}>현재 대기표가 없습니다.</Text>
-      )}
-    </View>
     </LinearGradient>
   );
 }
@@ -249,60 +248,85 @@ export default function StoreTicketList({ deviceId }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 30,
     alignItems: "center",
     justifyContent: "center",
+  },
+  content: {
+    flex: 1,
+    width: "90%",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "90%",
+    width: "100%",
     marginBottom: 20,
     alignItems: "center",
   },
   header: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: "bold",
     color: "#fff",
   },
   teamCount: {
     fontSize: 16,
     color: "#fff",
-  },
-  loadingText: {
-    fontSize: 20,
-    color: "#fff",
+    fontStyle: "italic",
   },
   ticketItem: {
     backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    width: "90%",
+    padding: 20,
+    borderRadius: 12,
+    marginBottom: 15,
+    width: "100%",
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
     position: "relative", // 오버레이를 덮는 데 필요
   },
   ticketText: {
     fontSize: 16,
-    color: "#333",
+    color: "#6661D5",
+    marginBottom: 5,
   },
   noTickets: {
     fontSize: 18,
     color: "#fff",
+    textAlign: "center",
+    marginTop: 30,
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 10,
+    justifyContent: "space-between",
+    marginTop: 15,
     width: "100%",
   },
   button: {
-    backgroundColor: "#444",
-    padding: 10,
-    borderRadius: 5,
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
     marginHorizontal: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 3,
+  },
+  callButton: {
+    backgroundColor: "#fff", 
+  },
+  completeButton: {
+    backgroundColor: "#fff", 
+  },
+  cancelButton: {
+    backgroundColor: "#fff", 
   },
   buttonText: {
-    color: "#fff",
+    color: "#6661D5",
     fontSize: 14,
     fontWeight: "bold",
   },
@@ -312,14 +336,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: 12,
   },
   overlayText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Button, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Button, ActivityIndicator, StyleSheet, TouchableOpacity, Text } from "react-native";
 import {
   getStorage,
   ref,
@@ -116,32 +116,41 @@ const StoreRegisterButton = ({ navigation, route }) => {
       start={{ x: 0, y: 0 }} // 왼쪽에서 시작
       end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
 >
-    <View>
-      {imageExists ? (
-        <>
-          <Button
-            title="가게 수정"
+<View style={styles.buttonContainer}>
+        {imageExists ? (
+          <>
+            <TouchableOpacity 
+              style={[styles.button, styles.editButton]} 
+              onPress={() =>
+                navigation.navigate("StoreRegisterEdit", {
+                  deviceId,
+                  action: "edit",
+                })
+              }
+            >
+              <Text style={styles.buttonText}>가게 수정</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.button, styles.deleteButton]} 
+              onPress={deleteStore}
+            >
+              <Text style={styles.buttonText}>가게 삭제</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <TouchableOpacity 
+            style={[styles.button, styles.registerButton]} 
             onPress={() =>
               navigation.navigate("StoreRegisterEdit", {
                 deviceId,
-                action: "edit",
+                action: "register",
               })
             }
-          />
-          <Button title="가게 삭제" onPress={deleteStore}></Button>
-        </>
-      ) : (
-        <Button
-          title="가게 등록"
-          onPress={() =>
-            navigation.navigate("StoreRegisterEdit", {
-              deviceId,
-              action: "register",
-            })
-          }
-        />
-      )}
-    </View>
+          >
+            <Text style={styles.buttonText}>가게 등록</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </LinearGradient>
   );
 };
@@ -157,6 +166,31 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonContainer: {
+    width: '80%',
+    paddingHorizontal: 20,
+  },
+  button: {
+    paddingVertical: 15,
+    marginVertical: 10,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  registerButton: {
+    backgroundColor: '#fff',
+  },
+  editButton: {
+    backgroundColor: '#fff',
+  },
+  deleteButton: {
+    backgroundColor: '#fff',
+  },
+  buttonText: {
+    color: '6661D5',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
