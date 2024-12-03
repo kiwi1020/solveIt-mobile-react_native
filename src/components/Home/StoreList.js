@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
@@ -6,7 +6,7 @@ import { getApps, initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../firebase/firebaseConfig";
 import { ScrollView, Image } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text} from "react-native";
 
 const Container = styled.View`
   flex: 1;
@@ -14,13 +14,6 @@ const Container = styled.View`
   background-color: #f9f9f9;
 `;
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#ffffff',
-    flex: 1,
-    padding: "20",
-    
-}});
 const StoreCard = styled.TouchableOpacity`
   background-color: #fff;
   padding: 15px;
@@ -87,19 +80,26 @@ const StoreList = ({ route }) => {
   };
 
   return (
-    // <Container>
-      <LinearGradient 
-      style={styles.container} 
+    <LinearGradient
+      style={styles.container}
       colors={['#BFC0D6', '#CBBCD8']}
-      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
-      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
->
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0.5, y: 0 }}
+    >
       {/* 전체 화면을 ScrollView로 감싸기 */}
       <ScrollView>
         {stores.map((store) => (
-          <StoreCard key={store.id} onPress={() => navigateToDetail(store.storeCode, deviceId, expoPushToken)}>
+          <StoreCard
+            key={store.id}
+            onPress={() => store.storeStatus !== 'closed' && navigateToDetail(store.storeCode, deviceId, expoPushToken)}
+            style={[
+              store.storeStatus === 'closed' && styles.overlay 
+            ]}
+          >
             <StoreName>{store.name}</StoreName>
-
+            {store.storeStatus === 'closed' && (
+                <Text style={styles.overlayText}>가게 오픈 준비중입니다!</Text>
+              )}
             {/* 첫 번째 이미지만 오른쪽에 배치 */}
             <ImageContainer>
               <Image
@@ -111,13 +111,38 @@ const StoreList = ({ route }) => {
                 }}
                 resizeMode="contain" // 이미지가 잘리지 않도록 설정
               />
+              
             </ImageContainer>
           </StoreCard>
         ))}
       </ScrollView>
-      </LinearGradient>
-    // </Container>
+    </LinearGradient>
   );
-};
+}
+  
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ffffff',
+    flex: 1,
+    padding: "20",
+  
+},
+overlay: {
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: "rgba(0, 0, 0, 0.4)",
+  justifyContent: "center",
+  alignItems: "center",
+  borderRadius: 12,
+},
+overlayText: {
+  color: "#fff",
+  fontSize: 18,
+  fontWeight: "bold",
+},
+});
 
 export default StoreList;

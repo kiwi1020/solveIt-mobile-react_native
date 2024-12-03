@@ -199,10 +199,7 @@ export default function StoreTicketList({ deviceId }) {
               const isDisabled = item.state === "complete" || item.state === "cancel";
               return (
                 <View style={styles.ticketItem}>
-                  <Text style={styles.ticketText}>번호: {item.number}</Text>
-                  <Text style={styles.ticketText}>인원: {item.personnel}명</Text>
-                  <Text style={styles.ticketText}>상태: {item.state}</Text>
-  
+                  <Text style={styles.ticketText}>번호: {item.number} / 인원: {item.personnel}명 / 상태: {item.state}</Text>
                   {!isDisabled ? (
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity
@@ -293,6 +290,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#6661D5",
     marginBottom: 5,
+    fontWeight: "bold"
   },
   noTickets: {
     fontSize: 18,

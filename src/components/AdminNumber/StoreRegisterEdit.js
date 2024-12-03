@@ -119,6 +119,7 @@ const StoreRegisterEdit = ({ route }) => {
         images: imageUrls, // 여러 이미지 URL을 저장
         storeCode: deviceId,
         nextNumber: 0,
+        storeStatus: 'closed',
       });
 
       alert("가게 정보가 성공적으로 등록되었습니다!");
@@ -144,6 +145,7 @@ const StoreRegisterEdit = ({ route }) => {
         images: imageUrls, // 여러 이미지 URL을 업데이트
         storeCode: deviceId,
         nextNumber: 0,
+        storeStatus: 'closed',
       });
 
       alert("가게 정보가 성공적으로 수정되었습니다!");
