@@ -9,6 +9,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Notifications from "expo-notifications";
 import { getFirestore, doc, getDoc, collection } from "firebase/firestore";
 import firebaseApp from "./firebase/firebaseConfig";
+import {  Image } from "react-native";
+import * as Clipboard from "expo-clipboard";
 
 const db = getFirestore(firebaseApp);
 
@@ -108,6 +110,12 @@ export default function App() {
     }
   };
 
+  const copyToClipboard = async () => {
+    const email = "fishman4535@gmail.com";
+    await Clipboard.setStringAsync(email); // 클립보드에 이메일 복사
+    Alert.alert("복사 완료", "이메일이 클립보드에 복사되었습니다.");
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -115,47 +123,64 @@ export default function App() {
       </View>
     );
   }
-
   if (!selectedRole) {
     return (
       <LinearGradient 
-      style={styles.container} 
-      colors={['#BFC0D6', '#CBBCD8']}
-      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
-      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
->
-
-      <View style={styles.roleSelectionContainer}>
-        <TouchableOpacity 
-          style={[styles.button, !isValid && styles.disabledButton]} 
-          onPress={() => setSelectedRole("user")} 
-          disabled={!isValid}>
-
-          <Text style={styles.buttonText}>일반 사용자</Text>
-
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          style={[styles.button, !isValid && styles.disabledButton]} 
-          onPress={checkAdminAccess} 
-          disabled={!isValid}>
-
-          <Text style={styles.buttonText}>가게 관리자</Text>
-
-        </TouchableOpacity>
-
-        <TextInput
-          style={[styles.input, !isValid && { borderColor: "red", borderWidth: 2 }]}
-          placeholder="UUID 입력 (유효한 UUID 형식)"
-          value={deviceId}
-          onChangeText={handleInputChange}
+        style={styles.container} 
+        colors={['#BFC0D6', '#CBBCD8']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.5, y: 0 }}
+      >
+        <Image
+          source={require('../assets/ON.png')} 
+          style={{
+            width: '100%',
+            height: 250,
+            marginTop: '30%',
+          }}
+          resizeMode="cover"
         />
-        {!isValid && <Text style={styles.errorText}>유효한 UUID를 입력해주세요.</Text>}
-      </View>
+  
+        <View style={styles.roleSelectionContainer}>
+          <TouchableOpacity 
+            style={[styles.button, !isValid && styles.disabledButton]} 
+            onPress={() => setSelectedRole("user")} 
+            disabled={!isValid}
+          >
+            <Text style={styles.buttonText}>일반 사용자</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity 
+            style={[styles.button, !isValid && styles.disabledButton]} 
+            onPress={checkAdminAccess} 
+            disabled={!isValid}
+          >
+            <Text style={styles.buttonText}>가게 관리자</Text>
+          </TouchableOpacity>
+  
+          <TextInput
+            style={[styles.input, !isValid && { borderColor: "red", borderWidth: 2 }]}
+            placeholder="UUID 입력 (유효한 UUID 형식)"
+            value={deviceId}
+            onChangeText={handleInputChange}
+          />
+          {!isValid && <Text style={styles.errorText}>유효한 UUID를 입력해주세요.</Text>}
+        </View>
+  
+        {/* 하단에 배치된 문의와 이메일 */}
+        <View style={styles.footer}>
+          <Text style={{
+            textAlign: 'center',
+            color: 'purple',
+          }}>문의</Text>
+          <TouchableOpacity style={styles.email} onPress={copyToClipboard}>
+            <Text style={styles.emailText}>fishman4535@gmail.com</Text>
+          </TouchableOpacity>
+        </View>
       </LinearGradient>
-
     );
   }
+  
 
   return (
     <NavigationContainer>
@@ -170,11 +195,11 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     flex: 1,
-    justifyContent:"center",
-    alignItems:"center",
-},
+    justifyContent: "center",
+    alignItems: "center",
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -189,13 +214,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "column", // 버튼을 세로로 정렬
+    width: "80%", // 전체 컨테이너 너비 제한
   },
   button: {
     backgroundColor: "#fff",
     padding: 15,
-    marginVertical: 10,
+    marginVertical: 10, // 버튼 간 간격
     borderRadius: 5,
-    width: "80%",
+    width: "100%", // 버튼 너비를 컨테이너에 맞춤
     alignItems: "center",
   },
   disabledButton: {
@@ -211,11 +238,23 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
-    width: "80%",
+    width: "100%", // 입력 필드 너비를 컨테이너에 맞춤
   },
   errorText: {
     color: "red",
     fontSize: 14,
     marginTop: 5,
   },
+  email: {
+    backgroundColor: "transparent", // 배경색 투명 설정
+
+  },
+  emailText: {
+    fontSize: 18,
+    color: "purple",
+    textDecorationLine: "underline",
+    backgroundColor: "transparent", // 배경색 투명 설정
+    marginBottom: 30,
+  },
 });
+
