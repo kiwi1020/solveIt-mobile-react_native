@@ -145,60 +145,73 @@ const StoreRegisterButton = ({ navigation, route }) => {
       start={{ x: 0, y: 0 }} // 왼쪽에서 시작
       end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
 >
+<Text 
+      style={{
+      fontSize:30,
+      color: '#ffffff',
+      textAlign:'center',
+      marginTop: -50,
+      marginBottom: 50,
+      
+      }}>{storeStatus}</Text>
 <View style={styles.buttonContainer}>
-        {imageExists ? (
-          <>
-          <Text>가게 운영 상태:{storeStatus}</Text>
-            <TouchableOpacity 
-              style={[styles.button, styles.editButton]} 
-              onPress={() =>
-                navigation.navigate("StoreRegisterEdit", {
-                  deviceId,
-                  action: "edit",
-                })
-              }
-            >
-              <Text style={styles.buttonText}>가게 수정</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.button, styles.deleteButton]} 
-              onPress={deleteStore}
-            >
-              <Text style={styles.buttonText}>가게 삭제</Text>
-            </TouchableOpacity>
+  {imageExists ? (
+    <>
+      
 
-             {/* 가게 오픈 */}
-             <TouchableOpacity 
-              style={[styles.button, styles.deleteButton]} 
-              onPress={() => updateStoreStatus('open')}
-            >
-              <Text style={styles.buttonText}>가게 오픈</Text>
-            </TouchableOpacity>
-            
-             {/* 가게 마감 */}
-            <TouchableOpacity 
-              style={[styles.button, styles.registerButton]} 
-              onPress={() => updateStoreStatus('closed')}
-            >
-              <Text style={styles.buttonText}>가게 마감</Text>
-            </TouchableOpacity>
-            
-          </>
-        ) : (
-          <TouchableOpacity 
-            style={[styles.button, styles.registerButton]} 
-            onPress={() =>
-              navigation.navigate("StoreRegisterEdit", {
-                deviceId,
-                action: "register",
-              })
-            }
-          >
-            <Text style={styles.buttonText}>가게 등록</Text>
-          </TouchableOpacity>
-        )}
+      {/* 첫 번째 행: 가게 수정, 가게 삭제 */}
+      <View style={styles.buttonRow}>
+        <TouchableOpacity 
+          style={[styles.button, styles.editButton]} 
+          onPress={() =>
+            navigation.navigate("StoreRegisterEdit", {
+              deviceId,
+              action: "edit",
+            })
+          }
+        >
+          <Text style={styles.buttonText}>가게 수정</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.button, styles.deleteButton]} 
+          onPress={deleteStore}
+        >
+          <Text style={styles.buttonText}>가게 삭제</Text>
+        </TouchableOpacity>
       </View>
+
+      {/* 두 번째 행: 가게 오픈, 가게 마감 */}
+      <View style={styles.buttonRow}>
+        <TouchableOpacity 
+          style={[styles.button, styles.openButton]} 
+          onPress={() => updateStoreStatus('open')}
+        >
+          <Text style={styles.buttonText}>가게 오픈</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.button, styles.registerButton]} 
+          onPress={() => updateStoreStatus('closed')}
+        >
+          <Text style={styles.buttonText}>가게 마감</Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  ) : (
+    <TouchableOpacity 
+      style={[styles.button, styles.registerButton]} 
+      onPress={() =>
+        navigation.navigate("StoreRegisterEdit", {
+          deviceId,
+          action: "register",
+        })
+      }
+    >
+      <Text style={styles.buttonText}>가게 등록</Text>
+    </TouchableOpacity>
+  )}
+</View>
     </LinearGradient>
   );
 };
@@ -216,30 +229,42 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonContainer: {
-    width: '80%',
+    width: '90%',
     paddingHorizontal: 20,
   },
+  buttonRow: {
+    flexDirection: "row", // 버튼을 가로로 배치
+    justifyContent: "space-between", // 버튼 사이 간격 균등
+    marginVertical: 5, // 버튼 그룹 간 간격
+  },
   button: {
+    flex: 1, // 버튼 크기 균등 배분
     paddingVertical: 15,
-    marginVertical: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginHorizontal: 5, // 버튼 사이 여백
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    height:130,
+    
   },
   registerButton: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   editButton: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   deleteButton: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
+  },
+  openButton: {
+    backgroundColor: "#fff",
   },
   buttonText: {
-    color: '6661D5',
+    color: "#6661D5",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
+
 
 export default StoreRegisterButton;
