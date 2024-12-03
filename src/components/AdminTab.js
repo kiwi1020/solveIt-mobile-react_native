@@ -11,6 +11,8 @@ const Tab = createBottomTabNavigator();
 const TabNavigation = ({ deviceId, setSelectedRole  }) => {
   return (
     <Tab.Navigator
+    initialRouteName="번호표 관리" // 기본으로 표시할 탭 설정
+
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -33,16 +35,16 @@ const TabNavigation = ({ deviceId, setSelectedRole  }) => {
       })}
     >
       {/* 각 스택에 deviceId 전달 */}
-      <Tab.Screen name="메인">
-        {() => (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setSelectedRole(null)}
-          >
-            <Text style={styles.buttonText}>메인으로 돌아가기</Text>
-          </TouchableOpacity>
-        )}
-      </Tab.Screen>
+      <Tab.Screen
+        name="메인"
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault(); // 기본 탭 이동 방지
+            setSelectedRole(null); // App.js로 이동
+          },
+        }}
+        component={() => null} // 메인 탭은 아무것도 렌더링하지 않음
+      />
       <Tab.Screen name="번호표 관리">
         {() => <StoreTicketStack deviceId={deviceId} />}
       </Tab.Screen>

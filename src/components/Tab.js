@@ -5,18 +5,19 @@ import Icon from "react-native-vector-icons/Ionicons"; // 아이콘 라이브러
 import App from "../App";
 import UserListStack from "./Home/UserListStack";
 import TicketUserStack from "./Number/TicketUserStack";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet,Image, View } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigation = ({ deviceId, setSelectedRole, expoPushToken }) => {
   return (
     <Tab.Navigator
+      initialRouteName="홈" // 기본으로 표시할 탭 설정
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          // 라우트 이름에 따라 아이콘 선택
           if (route.name === "메인") {
             iconName = focused ? "list" : "list";
           } else if (route.name === "홈") {
@@ -25,28 +26,36 @@ const TabNavigation = ({ deviceId, setSelectedRole, expoPushToken }) => {
             iconName = focused ? "receipt" : "receipt-outline";
           }
 
-          // 아이콘 렌더링
           return <Icon name={iconName} size={size} color={color} />;
         },
-        headerShown: false, // 모든 탭의 상단 헤더 숨김
-        tabBarActiveTintColor: "#6661D5", // 활성화된 탭 색상
-        tabBarInactiveTintColor: "gray", // 비활성화된 탭 색상
+        headerShown: false,
+        tabBarActiveTintColor: "#6661D5",
+        tabBarInactiveTintColor: "gray",
       })}
     >
-      {/* 각 스택에 deviceId 전달 */}
-      <Tab.Screen name="메인">
+      {/* 메인 탭 */}
+      <Tab.Screen
+        name="메인"
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault(); // 기본 탭 이동 방지
+            setSelectedRole(null); // App.js로 이동
+          },
+        }}
+        component={() => null} // 메인 탭은 아무것도 렌더링하지 않음
+      />
+
+      {/* 홈 탭 */}
+      <Tab.Screen name="홈">
         {() => (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setSelectedRole(null)}
-          >
-            <Text style={styles.buttonText}>메인으로 돌아가기</Text>
-          </TouchableOpacity>
+          <UserListStack
+            deviceId={deviceId}
+            expoPushToken={expoPushToken}
+          />
         )}
       </Tab.Screen>
-      <Tab.Screen name="홈">
-        {() => <UserListStack deviceId={deviceId} expoPushToken={expoPushToken}/>}
-      </Tab.Screen>
+
+      {/* 번호표 탭 */}
       <Tab.Screen name="번호표">
         {() => <TicketUserStack deviceId={deviceId} />}
       </Tab.Screen>
@@ -55,16 +64,31 @@ const TabNavigation = ({ deviceId, setSelectedRole, expoPushToken }) => {
 };
 
 
+
 const styles = StyleSheet.create({
-  button: {
+  container: {
+    backgroundColor: '#ffffff',
     flex: 1,
+    
+
+
+  
+},
+  button: {
+    borderWidth:2,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
+    marginTop: 50,
+    marginLeft: '3%',
+    marginRight: '3%',
+    height: 70,
+    borderRadius: 15,
+    backgroundColor: '#6661D5'
   },
   buttonText: {
-    color: "#6661D5",
-    fontSize: 18,
+    color: "#ffffff",
+    fontSize: 30,
     fontWeight: "bold",
   },
 });
