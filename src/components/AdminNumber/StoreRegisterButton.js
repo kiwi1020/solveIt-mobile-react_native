@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Button, ActivityIndicator, StyleSheet, TouchableOpacity, Text, Alert } from "react-native";
+import {
+  View,
+  Button,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Alert,
+} from "react-native";
 import {
   getStorage,
   ref,
@@ -10,15 +18,22 @@ import {
 import { getApps, initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../firebase/firebaseConfig";
 import { useFocusEffect } from "@react-navigation/native";
-import { deleteDoc, doc, getFirestore, collection, getDocs, getDoc, writeBatch } from "firebase/firestore";
-import { LinearGradient } from 'expo-linear-gradient';
+import {
+  deleteDoc,
+  doc,
+  getFirestore,
+  collection,
+  getDocs,
+  getDoc,
+  writeBatch,
+} from "firebase/firestore";
+import { LinearGradient } from "expo-linear-gradient";
 
 const StoreRegisterButton = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const [imageExists, setImageExists] = useState(false);
-  const [ storeStatus, setStoreStatus] = useState('');
+  const [storeStatus, setStoreStatus] = useState("");
   const { deviceId } = route.params;
-  
 
   // Firebase 초기화
   let app;
@@ -64,14 +79,16 @@ const StoreRegisterButton = ({ navigation, route }) => {
     }, [deviceId])
   );
 
-  const getStoreStatus = async() => {
+  const getStoreStatus = async () => {
     const storeRef = doc(db, "store", deviceId);
-      const storeDoc = await getDoc(storeRef);
-      if (storeDoc.exists()) {
-          const storeData = storeDoc.data();
-          setStoreStatus(storeData.storeStatus)
-      }
-  }
+    const storeDoc = await getDoc(storeRef);
+    if (storeDoc.exists()) {
+      const storeData = storeDoc.data();
+      if (storeData.storeStatus === "open")
+        setStoreStatus("가게를 오픈했습니다!");
+      else setStoreStatus("가게를 마감했습니다!");
+    }
+  };
   const deleteStore = async () => {
     try {
       // Firestore에서 가게 데이터 삭제
@@ -111,24 +128,21 @@ const StoreRegisterButton = ({ navigation, route }) => {
     }
   };
 
-
-  const updateStoreStatus = async(status) => {
-    const storeRef = doc(db, "store", deviceId); 
+  const updateStoreStatus = async (status) => {
+    const storeRef = doc(db, "store", deviceId);
     const batch = writeBatch(db);
-  
-    if (status === 'open') {
-      batch.update(storeRef, { storeStatus: "open" });
-      setStoreStatus("open");
-      Alert.alert("가게를 오픈했습니다!")
-    }
 
-    else {
+    if (status === "open") {
+      batch.update(storeRef, { storeStatus: "open" });
+      setStoreStatus("가게를 오픈했습니다!");
+      Alert.alert("가게를 오픈했습니다!");
+    } else {
       batch.update(storeRef, { storeStatus: "closed" });
-      setStoreStatus("closed");
-      Alert.alert("가게를 마감했습니다!")
+      setStoreStatus("가게를 마감했습니다!");
+      Alert.alert("가게를 마감했습니다!");
     }
     await batch.commit();
-  }
+  };
 
   if (loading) {
     return (
@@ -139,79 +153,79 @@ const StoreRegisterButton = ({ navigation, route }) => {
   }
 
   return (
-    <LinearGradient 
-      style={styles.container} 
-      colors={['#BFC0D6', '#CBBCD8']}
+    <LinearGradient
+      style={styles.container}
+      colors={["#BFC0D6", "#CBBCD8"]}
       start={{ x: 0, y: 0 }} // 왼쪽에서 시작
       end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
->
-<Text 
-      style={{
-      fontSize:30,
-      color: '#ffffff',
-      textAlign:'center',
-      marginTop: -50,
-      marginBottom: 50,
-      
-      }}>{storeStatus}</Text>
-<View style={styles.buttonContainer}>
-  {imageExists ? (
-    <>
-      
-
-      {/* 첫 번째 행: 가게 수정, 가게 삭제 */}
-      <View style={styles.buttonRow}>
-        <TouchableOpacity 
-          style={[styles.button, styles.editButton]} 
-          onPress={() =>
-            navigation.navigate("StoreRegisterEdit", {
-              deviceId,
-              action: "edit",
-            })
-          }
-        >
-          <Text style={styles.buttonText}>가게 수정</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          style={[styles.button, styles.deleteButton]} 
-          onPress={deleteStore}
-        >
-          <Text style={styles.buttonText}>가게 삭제</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* 두 번째 행: 가게 오픈, 가게 마감 */}
-      <View style={styles.buttonRow}>
-        <TouchableOpacity 
-          style={[styles.button, styles.openButton]} 
-          onPress={() => updateStoreStatus('open')}
-        >
-          <Text style={styles.buttonText}>가게 오픈</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          style={[styles.button, styles.registerButton]} 
-          onPress={() => updateStoreStatus('closed')}
-        >
-          <Text style={styles.buttonText}>가게 마감</Text>
-        </TouchableOpacity>
-      </View>
-    </>
-  ) : (
-    <TouchableOpacity 
-      style={[styles.button, styles.registerButton]} 
-      onPress={() =>
-        navigation.navigate("StoreRegisterEdit", {
-          deviceId,
-          action: "register",
-        })
-      }
     >
-      <Text style={styles.buttonText}>가게 등록</Text>
-    </TouchableOpacity>
-  )}
-</View>
+      <Text
+        style={{
+          fontSize: 30,
+          color: "#ffffff",
+          textAlign: "center",
+          marginTop: -50,
+          marginBottom: 50,
+        }}
+      >
+        {storeStatus}
+      </Text>
+      <View style={styles.buttonContainer}>
+        {imageExists ? (
+          <>
+            {/* 첫 번째 행: 가게 수정, 가게 삭제 */}
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={[styles.button, styles.editButton]}
+                onPress={() =>
+                  navigation.navigate("StoreRegisterEdit", {
+                    deviceId,
+                    action: "edit",
+                  })
+                }
+              >
+                <Text style={styles.buttonText}>가게 수정</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.button, styles.deleteButton]}
+                onPress={deleteStore}
+              >
+                <Text style={styles.buttonText}>가게 삭제</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* 두 번째 행: 가게 오픈, 가게 마감 */}
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={[styles.button, styles.openButton]}
+                onPress={() => updateStoreStatus("open")}
+              >
+                <Text style={styles.buttonText}>가게 오픈</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.button, styles.registerButton]}
+                onPress={() => updateStoreStatus("closed")}
+              >
+                <Text style={styles.buttonText}>가게 마감</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <TouchableOpacity
+            style={[styles.button, styles.registerButton]}
+            onPress={() =>
+              navigation.navigate("StoreRegisterEdit", {
+                deviceId,
+                action: "register",
+              })
+            }
+          >
+            <Text style={styles.buttonText}>가게 등록</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </LinearGradient>
   );
 };
@@ -229,7 +243,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonContainer: {
-    width: '90%',
+    width: "90%",
     paddingHorizontal: 20,
   },
   buttonRow: {
@@ -244,8 +258,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    height:130,
-    
+    height: 130,
   },
   registerButton: {
     backgroundColor: "#fff",
@@ -265,6 +278,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
 
 export default StoreRegisterButton;

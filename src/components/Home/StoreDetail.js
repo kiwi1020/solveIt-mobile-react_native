@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Button, FlatList, Image, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+  FlatList,
+  Image,
+  Dimensions,
+  Animated,
+} from "react-native";
 import firebaseApp from "../../firebase/firebaseConfig";
 import { getFirestore, doc, getDoc, collection } from "firebase/firestore";
 import { runTransaction } from "firebase/firestore";
-import { LinearGradient } from 'expo-linear-gradient';
-
+import { LinearGradient } from "expo-linear-gradient";
 
 const db = getFirestore(firebaseApp);
 
@@ -16,9 +25,10 @@ export default function StoreDetail({ route }) {
   const [storeImages, setStoreImages] = useState([]); // 가게 이미지 배열 저장
   const { storeCode, deviceId, expoPushToken } = route.params; // storeCode는 가게 UUID이고 deviceId는 사용자 UUID임
   const [storeName, setStoreName] = useState(""); // 가게 이름 상태
+  const [scale, setScale] = useState(new Animated.Value(1));
 
   // 화면의 크기를 얻어 슬라이드 이미지 크기 설정
-  const { width } = Dimensions.get('window');
+  const { width } = Dimensions.get("window");
 
   // 사용자 대기표 여부 확인
   useEffect(() => {
@@ -57,7 +67,7 @@ export default function StoreDetail({ route }) {
       try {
         const storeRef = doc(db, "store", storeCode); // storeCode에 해당하는 문서 참조
         const storeDoc = await getDoc(storeRef); // 문서 가져오기
-  
+
         if (storeDoc.exists()) {
           const storeData = storeDoc.data(); // 문서 데이터
           setStoreName(storeData.name || ""); // 가게 이름 설정
@@ -70,7 +80,6 @@ export default function StoreDetail({ route }) {
     };
     fetchStoreName(); // 가게 이름 가져오기 호출
 
-
     fetchStoreImages();
   }, [deviceId, storeCode]);
 
@@ -80,7 +89,7 @@ export default function StoreDetail({ route }) {
       setLoading(true);
 
       // Firestore 트랜잭션 실행
-        const nextNumber = await runTransaction(db, async (transaction) => {
+      const nextNumber = await runTransaction(db, async (transaction) => {
         const storeRef = doc(db, "store", storeCode);
 
         // 현재 대기표 번호 가져오기
@@ -95,21 +104,28 @@ export default function StoreDetail({ route }) {
 
         // 사용자 정보 저장
         const userRef = doc(db, "users", deviceId);
-        transaction.set(userRef, {
-          storeCode,
-          number: nextNumber,
-          state: "waiting",
-          personnel: personnel,
-          expoPushToken: expoPushToken,
-        }, { merge: true });
+        transaction.set(
+          userRef,
+          {
+            storeCode,
+            number: nextNumber,
+            state: "waiting",
+            personnel: personnel,
+            expoPushToken: expoPushToken,
+          },
+          { merge: true }
+        );
 
         // 대기표 저장
-        const ticketRef = doc(collection(db, "store", storeCode, "tickets"), deviceId);
+        const ticketRef = doc(
+          collection(db, "store", storeCode, "tickets"),
+          deviceId
+        );
         transaction.set(ticketRef, {
           number: nextNumber,
           state: "waiting",
           personnel: personnel,
-          expoPushToken: expoPushToken
+          expoPushToken: expoPushToken,
         });
 
         return nextNumber;
@@ -126,8 +142,6 @@ export default function StoreDetail({ route }) {
     }
   };
 
-
-
   // 인원 추가
   const increasePersonnel = () => {
     setPersonnel((prev) => prev + 1);
@@ -138,14 +152,28 @@ export default function StoreDetail({ route }) {
     setPersonnel((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
-  return (
-    <LinearGradient 
-      style={styles.container} 
-      colors={['#BFC0D6', '#CBBCD8']}
-      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
-      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
->
-    <View >
+  const handlePressIn = () => {
+    Animated.spring(scale, {
+      toValue: 1.3, // 눌렀을 때 크기를 작게 만듦
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1, // 버튼에서 손을 뗐을 때 원래 크기로 돌아옴
+      useNativeDriver: true,
+    }).start();
+  };
+
+ return (
+  <LinearGradient
+    style={styles.container}
+    colors={["#BFC0D6", "#CBBCD8"]}
+    start={{ x: 0, y: 0 }} // 왼쪽에서 시작
+    end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
+  >
+    <View style={styles.contentContainer}>  {/* 부모 컨테이너에 중앙 정렬을 위한 스타일 추가 */}
       <FlatList
         data={storeImages}
         horizontal
@@ -159,19 +187,31 @@ export default function StoreDetail({ route }) {
         style={styles.flatList} // FlatList 전체 크기 제한
       />
       <View style={styles.nameContainer}>
-
-      <Text style={styles.storeName}>{storeName}</Text>
-
+        <Text style={styles.storeName}>{storeName}</Text>
       </View>
 
+      <Animated.View style={{ transform: [{ scale }] }}>
+        <TouchableOpacity
+          style={canDrawTicket ? styles.ticketButton : styles.noneTicketButton}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          onPress={() => createTicketWithSubCollection(storeCode)}
+          activeOpacity={0.7}
+          disabled={loading || !canDrawTicket} // 로딩 중이거나 이미 대기표를 뽑았다면 비활성화
+        >
+          <Text style={styles.ticketButtonText}>
+            {loading
+              ? "대기표 생성 중..."
+              : "클릭"}
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
+
       <View style={styles.textContainer}>
-
         <Text style={styles.header}>인원 수</Text>
-
       </View>
 
       <View style={styles.counterContainer}>
-
         <TouchableOpacity style={styles.button} onPress={decreasePersonnel}>
           <Text style={styles.buttonText}>-</Text>
         </TouchableOpacity>
@@ -182,65 +222,58 @@ export default function StoreDetail({ route }) {
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
-
-      <Button
-        title={loading ? "대기표 생성 중..." : canDrawTicket ? "대기표 뽑기" : "이미 대기표를 뽑았습니다"}
-        onPress={() => createTicketWithSubCollection(storeCode)}
-        disabled={loading || !canDrawTicket} // 로딩 중이거나 이미 대기표를 뽑았다면 비활성화
-      />
-      {ticketNumber && (
-        <Text style={styles.ticketInfo}>
-          당신의 대기표 번호는 {ticketNumber}번입니다.
-        </Text>
-      )}
+      <Text style={styles.text}>{canDrawTicket
+              ? "아직 대기표를 뽑지 않았습니다"
+              : "이미 대기표를 뽑았습니다"}</Text>
     </View>
-    </LinearGradient>
-  );
+  </LinearGradient>
+);
 }
 
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    
     backgroundColor: "#6661D5",
+  },
+  contentContainer: {
+    flex: 1,               // 부모 컨테이너가 화면 전체를 차지하도록 설정
+    justifyContent: 'center', // 수직 중앙 정렬
+    alignItems: 'center',     // 수평 중앙 정렬
+    padding: 20,            // 추가 여백을 주어 화면에 여유를 둡니다
   },
   flatList: {
     maxHeight: 200, // FlatList 전체 높이 제한
-    
     marginTop: 30,
   },
-  nameContainer:{
+  nameContainer: {
     marginTop: 10,
     alignItems: "left", // 가로 축 중앙 정렬
-    marginLeft: 30,
-
   },
-  storeName:{
+  storeName: {
     fontWeight: "bold",
     fontSize: 25,
-    color: '#FFFFFF'
+    color: "#FFFFFF",
   },
   textContainer: {
     alignItems: "center", // 가로 축 중앙 정렬
     justifyContent: "center", // 세로 축 중앙 정렬
-    width: '100%', // 부모 컨테이너에 맞게 너비 설정
+    width: "100%", // 부모 컨테이너에 맞게 너비 설정
     marginBottom: 20, // 아래 간격 추가
   },
   header: {
-    marginTop:30,
+    marginTop: 30,
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#fff",
     textAlign: "center", // 텍스트 자체 중앙 정렬
-
   },
   counterContainer: {
     flexDirection: "row", // 아이템을 가로로 배치
     alignItems: "center", // 세로 축 중앙 정렬
     justifyContent: "center", // 가로 축 중앙 정렬
     marginBottom: 20,
-    width: '100%', // 부모 요소 기준으로 중앙 정렬되도록 설정
+    width: "100%", // 부모 요소 기준으로 중앙 정렬되도록 설정
   },
   button: {
     padding: 10,
@@ -255,7 +288,6 @@ const styles = StyleSheet.create({
   counter: {
     fontSize: 18,
     fontWeight: "bold",
-    
   },
   ticketInfo: {
     marginTop: 20,
@@ -268,5 +300,32 @@ const styles = StyleSheet.create({
     marginHorizontal: 10, // 이미지 간격 설정
     borderRadius: 10,
   },
-  
+  ticketButton: {
+    width: 100, // 버튼의 가로 크기 (원형이므로 가로, 세로 크기를 동일하게 설정)
+    height: 100, // 버튼의 세로 크기
+    borderRadius: 50, // 원형으로 만들기 위해 반지름을 버튼 크기의 반으로 설정
+    backgroundColor: "#6661D5", // 버튼 배경색 (원하는 색으로 변경 가능)
+    justifyContent: "center", // 버튼 텍스트를 수직 중앙 정렬
+    alignItems: "center", // 버튼 텍스트를 수평 중앙 정렬
+    marginTop: 20, // 버튼 위에 간격 추가
+  },
+  ticketButtonText: {
+    color: "#fff", // 텍스트 색상 (흰색으로 설정)
+    fontSize: 18, // 텍스트 크기
+    fontWeight: "bold", // 텍스트 두께
+  },
+  noneTicketButton: {
+    width: 100, // 버튼의 가로 크기 (원형이므로 가로, 세로 크기를 동일하게 설정)
+    height: 100, // 버튼의 세로 크기
+    borderRadius: 50, // 원형으로 만들기 위해 반지름을 버튼 크기의 반으로 설정
+    backgroundColor: "#EAEAEA", // 버튼 배경색 (원하는 색으로 변경 가능)
+    justifyContent: "center", // 버튼 텍스트를 수직 중앙 정렬
+    alignItems: "center", // 버튼 텍스트를 수평 중앙 정렬
+    marginTop: 20, // 버튼 위에 간격 추가
+  },
+  text: {
+    fontWeight: "bold",
+    fontSize: 25,
+    color: "#FFFFFF",
+  }
 });
