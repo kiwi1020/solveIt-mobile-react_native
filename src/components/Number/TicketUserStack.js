@@ -22,10 +22,12 @@ const TicketUserStack = ({ deviceId }) => {
     screenOptions={{
       headerBackTitle: "뒤로가기", // 뒤로가기 버튼 텍스트 수정
       headerTitle: "번호표 관리", // 모든 화면의 기본 제목
+     
     headerTitleStyle: {
       fontSize: 20,
       fontWeight: "bold",
       color: "#333", // 헤더 제목 색상
+      
     },
   
     }}

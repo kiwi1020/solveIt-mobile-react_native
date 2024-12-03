@@ -16,29 +16,22 @@ const UserListStack = ({ deviceId, expoPushToken }) => (
     screenOptions={{
       headerBackTitle: "뒤로가기",
       headerTintColor: '#ffffff', // 뒤로가기 버튼 색상 (예: 주황색)
-      headerStyle: {
-        height: 75, // 헤더 높이
-      },
-      headerBackground: () => (
-        <LinearGradient
-          colors={['#BFC0D6', '#CBBCD8']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={{ flex: 1 }}
-        />
-      ),
+      
+      
+     
     }}
   >
     <Stack.Screen
   name="StoreList"
   component={StoreList}
   options={{
-    title: '가게 목록',
+    title: '주점 리스트',
     headerTitleStyle: {
-      color: '#ffffff', // 글자 색상 (예: 흰색)
+      color: '#000000', // 글자 색상 (예: 흰색)
       fontWeight: 'bold', // 글자 굵기 (예: 굵게)
       fontSize: 21, // 글자 크기 (선택 사항)
     },
+    
   }}
   initialParams={{ deviceId, expoPushToken }}
 />
