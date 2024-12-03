@@ -7,6 +7,10 @@ import TabNavigation from "./components/Tab";
 import AdminTabNavigation from "./components/AdminTab";
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Notifications from "expo-notifications";
+import { getFirestore, doc, getDoc, collection } from "firebase/firestore";
+import firebaseApp from "./firebase/firebaseConfig";
+
+const db = getFirestore(firebaseApp);
 
 export default function App() {
   const [deviceId, setDeviceId] = useState(""); // UUID 상태 초기화
@@ -35,6 +39,8 @@ export default function App() {
         setLoading(false);
       }
     };
+
+   
 
     const registerForPushNotificationsAsync = async () => {
       try {
@@ -79,6 +85,28 @@ export default function App() {
     setIsValid(isValidUUID(text));
   };
 
+  const checkAdminAccess = async () => {
+    if (!isValid) {
+      Alert.alert("오류", "유효한 UUID를 입력해주세요.");
+      return;
+    }
+  
+    try {
+      const docRef = doc(collection(db, "accept"), deviceId); // Firestore에서 입력된 UUID로 조회
+      const docSnap = await getDoc(docRef);
+  
+      if (docSnap.exists()) {
+        setSelectedRole("admin"); // 관리자 권한 설정
+        Alert.alert("권한 확인", "관리자 권한이 확인되었습니다.");
+        console.log("관리자 권한 확인됨:", docSnap.data());
+      } else {
+        Alert.alert("권한 없음", "해당 UUID는 관리자 권한이 없습니다.");
+      }
+    } catch (error) {
+      console.error("Firebase 조회 오류:", error);
+      Alert.alert("오류", "관리자 권한 확인 중 문제가 발생했습니다.");
+    }
+  };
 
   if (loading) {
     return (
@@ -98,12 +126,22 @@ export default function App() {
 >
 
       <View style={styles.roleSelectionContainer}>
-        <TouchableOpacity style={[styles.button, !isValid && styles.disabledButton]} onPress={() => setSelectedRole("user")} disabled={!isValid}>
+        <TouchableOpacity 
+          style={[styles.button, !isValid && styles.disabledButton]} 
+          onPress={() => setSelectedRole("user")} 
+          disabled={!isValid}>
+
           <Text style={styles.buttonText}>일반 사용자</Text>
+
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.button, !isValid && styles.disabledButton]} onPress={() => setSelectedRole("admin")} disabled={!isValid}>
+        <TouchableOpacity 
+          style={[styles.button, !isValid && styles.disabledButton]} 
+          onPress={checkAdminAccess} 
+          disabled={!isValid}>
+
           <Text style={styles.buttonText}>가게 관리자</Text>
+
         </TouchableOpacity>
 
         <TextInput
