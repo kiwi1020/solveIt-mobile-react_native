@@ -19,13 +19,13 @@ const StoreResisterStack = ({ deviceId })  => (
   <Stack.Screen
     name="StoreRegisterButton"
     component={StoreRegisterButton}
-    options={{ title: '가게 등록 및 수정' }}
+    options={{ title: '가게 설정' }}
     initialParams={{ deviceId }}
   />
   <Stack.Screen
     name="StoreRegisterEdit"
     component={StoreRegisterEdit}
-    options={{ title: '가게 번호 목록' }}
+    options={{ title: '가게 등록 및 수정' }}
   />
 </Stack.Navigator>
 );

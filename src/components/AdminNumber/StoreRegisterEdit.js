@@ -159,13 +159,16 @@ const StoreRegisterEdit = ({ route }) => {
   const handleButtonPress = action === "edit" ? handleEdit : handleRegister;
 
   return (
-    <View>
-    <ScrollView>
     <LinearGradient
       style={styles.container}
       colors={["#BFC0D6", "#CBBCD8"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0.5, y: 0 }}
+    >
+    <View>
+    <ScrollView
+  showsVerticalScrollIndicator={false} // 스크롤 바 숨김
+  contentContainerStyle={{ flexGrow: 1 }} // ScrollView 안의 콘텐츠가 전체 화면을 채우도록 설정
     >
      
       <View style={styles.content}>
@@ -203,9 +206,10 @@ const StoreRegisterEdit = ({ route }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </LinearGradient>
+    
     </ScrollView>
     </View>
+    </LinearGradient>
   );
 };
 
