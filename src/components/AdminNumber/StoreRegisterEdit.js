@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  ScrollView
 } from "react-native";
 import * as ImagePicker from "expo-image-picker"; // 이미지 선택을 위한 라이브러리 사용
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -21,10 +22,11 @@ import {
 } from "firebase/firestore";
 import { LinearGradient } from "expo-linear-gradient";
 
+// 가게 정보를 저장하거나 수정하는 컴포넌트
 const StoreRegisterEdit = ({ route }) => {
   const [storeName, setStoreName] = useState("");
-  const [images, setImages] = useState([]); // 이미지 여러 개 저장
-  const { deviceId, action } = route.params; // action 값 가져오기
+  const [images, setImages] = useState([]); 
+  const { deviceId, action } = route.params; 
 
   let app;
   if (!getApps().length) {
@@ -32,24 +34,24 @@ const StoreRegisterEdit = ({ route }) => {
   } else {
     app = getApps()[0];
   }
-  const storage = getStorage(app); // Firebase Storage 참조
+  const storage = getStorage(app); 
   const db = getFirestore(app);
 
-  // store 정보 가져오기 (useEffect)
+// 기존에 저장되어있는 이미지 표시
   useEffect(() => {
     const fetchStoreData = async () => {
-      const docRef = doc(db, "store", deviceId); // Firestore에서 가게 정보 가져오기
+      const docRef = doc(db, "store", deviceId);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         const storeData = docSnap.data();
         setStoreName(storeData.name);
 
-        // Firestore에서 가져온 이미지 URL을 React Native Image 컴포넌트에서 사용할 수 있는 형식으로 변환
+      
         const formattedImages = (storeData.images || []).map((url) => ({
           uri: url,
         }));
-        setImages(formattedImages); // 기존 이미지 URL로 초기화
+        setImages(formattedImages);
       } else {
         console.log("No such document!");
       }
@@ -61,10 +63,9 @@ const StoreRegisterEdit = ({ route }) => {
   const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      // allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-      allowsMultipleSelection: true, // 여러 이미지 선택
+      allowsMultipleSelection: true, 
     });
 
     if (!result.canceled) {
@@ -79,18 +80,16 @@ const StoreRegisterEdit = ({ route }) => {
     for (let i = 0; i < images.length; i++) {
       const uri = images[i].uri;
       const fileNameArray = uri.split("/");
-      const fileName = fileNameArray[fileNameArray.length - 1]; // 파일 이름 추출
+      const fileName = fileNameArray[fileNameArray.length - 1]; 
       const storageRef = ref(
         storage,
         `store_images/${deviceId}/profile/${fileName}`
       );
 
-      // 파일 업로드
       const response = await fetch(uri);
       const blob = await response.blob();
-      await uploadBytes(storageRef, blob); // 이미지 업로드
+      await uploadBytes(storageRef, blob); 
 
-      // 업로드 완료 후 다운로드 URL 가져오기
       const downloadURL = await getDownloadURL(storageRef);
       imageUrls.push(downloadURL);
     }
@@ -167,6 +166,7 @@ const StoreRegisterEdit = ({ route }) => {
       end={{ x: 0.5, y: 0 }}
     >
       <View style={styles.content}>
+      <ScrollView>
         <Text style={styles.header}>
           {action === "edit" ? "가게 정보 수정" : "가게 등록"}
         </Text>
@@ -180,6 +180,7 @@ const StoreRegisterEdit = ({ route }) => {
 
         <Text style={styles.label}>가게 이미지</Text>
         <TouchableOpacity style={styles.imageUpload} onPress={pickImages}>
+        <View style={styles.imageContainer}>
           {images.length > 0 ? (
             images.map((image, index) => (
               <Image
@@ -191,6 +192,7 @@ const StoreRegisterEdit = ({ route }) => {
           ) : (
             <Text style={styles.uploadText}>이미지 업로드</Text>
           )}
+          </View>
         </TouchableOpacity>
 
         <View style={styles.buttonContainer}>
@@ -198,6 +200,7 @@ const StoreRegisterEdit = ({ route }) => {
             <Text style={styles.buttonText}>{buttonTitle}</Text>
           </TouchableOpacity>
         </View>
+        </ScrollView>
       </View>
     </LinearGradient>
   );
@@ -250,8 +253,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9F9F9", // 부드러운 배경색
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     margin: 5,
     borderRadius: 10,
   },
@@ -281,6 +284,12 @@ const styles = StyleSheet.create({
   },
   buttonHovered: {
     backgroundColor: "#3A56E3", // 마우스 오버 효과 (터치 이벤트로 대체)
+  },
+  imageContainer: {
+    flexDirection: "row", // 수평 배치
+    justifyContent: "flex-start", // 왼쪽 정렬 (필요에 따라 변경 가능)
+    alignItems: "center", // 세로 중앙 정렬
+    flexWrap: "wrap", // 화면이 넘어가면 줄바꿈 (필요 없다면 제거)
   },
 });
 export default StoreRegisterEdit;
