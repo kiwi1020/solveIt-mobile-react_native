@@ -108,9 +108,9 @@ export default function MyTicket({ deviceId }) {
       <View style={styles.ticketContainer}>
         {myTicketNumber ? (
           <>
-            {/* 영수증 스타일 */}
+            
             <View style={styles.receipt}>
-              <Text style={styles.storeName}>{storeName}</Text> {/* 가게 이름 표시 */}
+              <Text style={styles.storeName}>{storeName}</Text> 
               <Text style={styles.ticketHeader}>대기표</Text>
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>번호:</Text>
@@ -126,7 +126,7 @@ export default function MyTicket({ deviceId }) {
               </View>
             </View>
 
-            {/* 취소 버튼 */}
+           
             {state !== "cancel" && (
               <TouchableOpacity style={styles.button} onPress={cancelTicket}>
                 <Text style={styles.buttonText}>취소</Text>

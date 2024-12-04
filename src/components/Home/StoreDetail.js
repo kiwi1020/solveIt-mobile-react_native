@@ -23,7 +23,7 @@ export default function StoreDetail({ route }) {
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [canDrawTicket, setCanDrawTicket] = useState(true); // 대기표 뽑기 가능 여부
   const [storeImages, setStoreImages] = useState([]); // 가게 이미지 배열 저장
-  const { storeCode, deviceId, expoPushToken } = route.params; // storeCode는 가게 UUID이고 deviceId는 사용자 UUID임
+  const {storeCode, deviceId, expoPushToken } = route.params; // storeCode는 가게 UUID이고 deviceId는 사용자 UUID임
   const [storeName, setStoreName] = useState(""); // 가게 이름 상태
   const [scale, setScale] = useState(new Animated.Value(1));
 
@@ -173,7 +173,7 @@ export default function StoreDetail({ route }) {
     start={{ x: 0, y: 0 }} // 왼쪽에서 시작
     end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
   >
-    <View style={styles.contentContainer}>  {/* 부모 컨테이너에 중앙 정렬을 위한 스타일 추가 */}
+    <View style={styles.contentContainer}>  
       <FlatList
         data={storeImages}
         horizontal
@@ -187,7 +187,7 @@ export default function StoreDetail({ route }) {
         style={styles.flatList} // FlatList 전체 크기 제한
       />
       <View style={styles.nameContainer}>
-        <Text style={styles.storeName}>{storeName}</Text>
+        <Text style={styles.storeName}>{storeName || "가게 이름 없음"}</Text>
       </View>
 
       <Animated.View style={{ transform: [{ scale }] }}>
