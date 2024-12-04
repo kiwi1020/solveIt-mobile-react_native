@@ -159,6 +159,7 @@ const StoreRegisterEdit = ({ route }) => {
   const handleButtonPress = action === "edit" ? handleEdit : handleRegister;
 
   return (
+    <View>
     <ScrollView>
     <LinearGradient
       style={styles.container}
@@ -166,6 +167,7 @@ const StoreRegisterEdit = ({ route }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 0.5, y: 0 }}
     >
+     
       <View style={styles.content}>
         <Text style={styles.header}>
           {action === "edit" ? "가게 정보 수정" : "가게 등록"}
@@ -203,6 +205,7 @@ const StoreRegisterEdit = ({ route }) => {
       </View>
     </LinearGradient>
     </ScrollView>
+    </View>
   );
 };
 
