@@ -1,19 +1,15 @@
-// 넘버 - 스택
-//
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import StoreTicketList from './StoreTicketList';
-
-
 
 const Stack = createStackNavigator();
 
+//가게 대기표 파트 함수
 const StoreTicketStack = ({ deviceId }) => (
   <Stack.Navigator 
   initialRouteName="StoreTicketList"
   screenOptions={{
-    headerBackTitle: "뒤로가기", // 뒤로가기 버튼 텍스트 수정
+    headerBackTitle: "뒤로가기", 
   }}
   >
     <Stack.Screen name="StoreTicketStack" component={StoreTicketStack} options={{ title: '게시글 목록' }} />

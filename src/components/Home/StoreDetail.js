@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Modal,
   View,
   Text,
   StyleSheet,
@@ -28,6 +29,8 @@ export default function StoreDetail({ route, navigation  }) {
   const [scale, setScale] = useState(new Animated.Value(1));
   const [pulseScale] = useState(new Animated.Value(1)); // 테두리 애니메이션 크기
   const [pulseOpacity] = useState(new Animated.Value(1)); // 테두리 애니메이션 투명도
+  const [modalVisible, setModalVisible] = useState(false);  // 모달의 상태를 관리
+  const [selectedImage, setSelectedImage] = useState(null); // 선택된 이미지 URL 저장
   // 화면의 크기를 얻어 슬라이드 이미지 크기 설정
   const { width } = Dimensions.get("window");
 
@@ -35,12 +38,12 @@ export default function StoreDetail({ route, navigation  }) {
     Animated.loop(
       Animated.parallel([
         Animated.timing(pulseScale, {
-          toValue: 2.5, // 원의 크기를 증가
+          toValue: 2.5, 
           duration: 1500,
           useNativeDriver: true,
         }),
         Animated.timing(pulseOpacity, {
-          toValue: 0, // 투명도를 점점 줄임
+          toValue: 0, 
           duration: 1500,
           useNativeDriver: true,
         }),
@@ -58,7 +61,6 @@ export default function StoreDetail({ route, navigation  }) {
     }
   }, [canDrawTicket]);
 
-  // 사용자 대기표 여부 확인
   useEffect(() => {
     const checkUserTicket = async () => {
       try {
@@ -66,7 +68,7 @@ export default function StoreDetail({ route, navigation  }) {
         const userDoc = await getDoc(userRef);
 
         if (userDoc.exists()) {
-          setCanDrawTicket(false); // 이미 대기표가 있음 -> 버튼 비활성화
+          setCanDrawTicket(false); 
           console.log("이미 대기표를 뽑았습니다.");
         }
       } catch (error) {
@@ -78,14 +80,13 @@ export default function StoreDetail({ route, navigation  }) {
 
     checkUserTicket();
 
-    // 가게 이미지 가져오기
     const fetchStoreImages = async () => {
       try {
         const storeRef = doc(db, "store", storeCode);
         const storeDoc = await getDoc(storeRef);
 
         if (storeDoc.exists()) {
-          const images = storeDoc.data().images || []; // images 배열 가져오기
+          const images = storeDoc.data().images || []; 
           setStoreImages(images);
         }
       } catch (error) {
@@ -95,13 +96,13 @@ export default function StoreDetail({ route, navigation  }) {
 
     const fetchStoreName = async () => {
       try {
-        const storeRef = doc(db, "store", storeCode); // storeCode에 해당하는 문서 참조
-        const storeDoc = await getDoc(storeRef); // 문서 가져오기
+        const storeRef = doc(db, "store", storeCode); 
+        const storeDoc = await getDoc(storeRef); 
 
         if (storeDoc.exists()) {
-          const storeData = storeDoc.data(); // 문서 데이터
-          setStoreName(storeData.name || ""); // 가게 이름 설정
-          navigation.setOptions({ title: storeData.name || "가게 이름 없음" }); // 헤더 제목 설정
+          const storeData = storeDoc.data(); 
+          setStoreName(storeData.name || ""); 
+          navigation.setOptions({ title: storeData.name || "가게 이름 없음" }); 
 
         } else {
           console.error("가게 문서를 찾을 수 없습니다.");
@@ -110,31 +111,26 @@ export default function StoreDetail({ route, navigation  }) {
         console.error("가게 이름 가져오기 오류:", error);
       }
     };
-    fetchStoreName(); // 가게 이름 가져오기 호출
+    fetchStoreName(); 
 
     fetchStoreImages();
   }, [deviceId, storeCode]);
 
-  // 대기표 생성 함수
   const createTicketWithSubCollection = async (storeCode) => {
     try {
       setLoading(true);
 
-      // Firestore 트랜잭션 실행
       const nextNumber = await runTransaction(db, async (transaction) => {
         const storeRef = doc(db, "store", storeCode);
 
-        // 현재 대기표 번호 가져오기
         const storeDoc = await transaction.get(storeRef);
-        let nextNumber = 1; // 기본 대기표 번호
+        let nextNumber = 1; 
         if (storeDoc.exists()) {
           nextNumber = storeDoc.data().nextNumber + 1;
         }
 
-        // 다음 대기표 번호 업데이트
         transaction.set(storeRef, { nextNumber }, { merge: true });
 
-        // 사용자 정보 저장
         const userRef = doc(db, "users", deviceId);
         transaction.set(
           userRef,
@@ -148,7 +144,6 @@ export default function StoreDetail({ route, navigation  }) {
           { merge: true }
         );
 
-        // 대기표 저장
         const ticketRef = doc(
           collection(db, "store", storeCode, "tickets"),
           deviceId
@@ -163,7 +158,6 @@ export default function StoreDetail({ route, navigation  }) {
         return nextNumber;
       });
 
-      // 성공적으로 대기표 번호 저장
       setTicketNumber(nextNumber);
       setCanDrawTicket(false);
       console.log(`Ticket ${nextNumber} created for store ${storeCode}`);
@@ -174,29 +168,40 @@ export default function StoreDetail({ route, navigation  }) {
     }
   };
 
-  // 인원 추가
+
   const increasePersonnel = () => {
     setPersonnel((prev) => prev + 1);
   };
 
-  // 인원 감소 (최소 1명)
+
   const decreasePersonnel = () => {
     setPersonnel((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
   const handlePressIn = () => {
     Animated.spring(scale, {
-      toValue: 1.3, // 눌렀을 때 크기를 작게 만듦
+      toValue: 1.3, 
       useNativeDriver: true,
     }).start();
   };
 
   const handlePressOut = () => {
     Animated.spring(scale, {
-      toValue: 1, // 버튼에서 손을 뗐을 때 원래 크기로 돌아옴
+      toValue: 1, 
       useNativeDriver: true,
     }).start();
   };
+
+   const openModal = (imageUri) => {
+    setSelectedImage(imageUri);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedImage(null);
+  };
+
 
  return (
   <LinearGradient
@@ -211,13 +216,29 @@ export default function StoreDetail({ route, navigation  }) {
         horizontal
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <Image
-            source={{ uri: item }}
-            style={[styles.image, { width: width - 40 }]} // 화면 크기에 맞게 이미지 크기 설정
-          />
+          <TouchableOpacity onPress={() => openModal(item)}>
+            <Image
+              source={{ uri: item }}
+              style={[styles.image, { width: width - 40 }]} // 화면 크기에 맞게 이미지 크기 설정
+            />
+          </TouchableOpacity>
         )}
         style={styles.flatList} // FlatList 전체 크기 제한
       />
+
+      
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        onRequestClose={closeModal} // 모달을 닫을 때 호출되는 함수
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+            <Text style={styles.closeText}>X</Text>
+          </TouchableOpacity>
+          <Image source={{ uri: selectedImage }} style={styles.modalImage} resizeMode="contain" />
+        </View>
+      </Modal>
       
       <View style={styles.ticketContainer}>
     <Animated.View
@@ -264,7 +285,7 @@ export default function StoreDetail({ route, navigation  }) {
       </View>
       <Text style={styles.text}>{canDrawTicket
               ? ""
-              : "이미 대기표를 뽑았습니다"}</Text>
+              : "이미 대기표를 뽑았습니다"}</Text> 
     </View>
   </LinearGradient>
 );
@@ -407,5 +428,29 @@ const styles = StyleSheet.create({
     width: 100, // 버튼 크기와 동일
     height: 100, // 버튼 크기와 동일
     marginTop:40,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // 배경을 반투명하게 만들어 모달이 강조되도록 함
+  },
+  modalImage: {
+    width: '90%',
+    height: '90%',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 30,
+    right: 20,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 10,
+    zIndex: 1,
+  },
+  closeText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
   },
 });

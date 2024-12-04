@@ -15,9 +15,10 @@ Notifications.setNotificationHandler({
   }),
 });
 
+//대기표 목록 관리 컴포넌트
 export default function StoreTicketList({ deviceId }) {
-  const [tickets, setTickets] = useState([]); // 대기표 데이터 상태 저장
-  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true); 
 
   const [notification, setNotification] = useState(null);
   const notificationListener = useRef();
@@ -25,7 +26,7 @@ export default function StoreTicketList({ deviceId }) {
 
   useEffect(() => {
     const storeCode = deviceId;
-    const ticketsRef = collection(db, "store", storeCode, "tickets"); // 하위 컬렉션 경로
+    const ticketsRef = collection(db, "store", storeCode, "tickets"); 
     const q = query(ticketsRef);
     const unsubscribe = onSnapshot(
       q,
@@ -34,7 +35,7 @@ export default function StoreTicketList({ deviceId }) {
         querySnapshot.forEach((doc) => {
           ticketList.push({ id: doc.id, ...doc.data() });
         });
-        setTickets(ticketList); // 대기표 데이터 업데이트
+        setTickets(ticketList); 
         setLoading(false);
       },
       (error) => {
@@ -42,9 +43,10 @@ export default function StoreTicketList({ deviceId }) {
       }
     );
     
-    return () => unsubscribe(); // 컴포넌트 언마운트 시 구독 해제
+    return () => unsubscribe(); 
   }, [deviceId]);
 
+  // 푸시 알림 리스너 등록 
   useEffect(() => {
     
     if (Platform.OS === 'android') {
@@ -58,11 +60,11 @@ export default function StoreTicketList({ deviceId }) {
     
     const notificationListener = Notifications.addNotificationReceivedListener(notification => {
       console.log("푸시 알림 수신:", notification);
-      setNotification(notification); // 알림을 상태에 저장
+      setNotification(notification); 
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log("푸시 알림 응답:", response);  // 알림 응답 여부 확인
+      console.log("푸시 알림 응답:", response);  
       console.log(response);
     });
 
@@ -84,6 +86,7 @@ export default function StoreTicketList({ deviceId }) {
 
   const waitingTickets = tickets.filter((ticket) => ticket.state === "waiting");
 
+  // 대기표 호출 함수
   const handleCall = async(expoPushToken) => {
     if (!expoPushToken) {
       Alert.alert("푸시 토큰이 없습니다.");
@@ -118,6 +121,7 @@ export default function StoreTicketList({ deviceId }) {
     }
   };
 
+  // 대기표 취소 함수
   const handleCancel = async (ticketId, deviceId) => {
     try {
       const storeCode = deviceId;
@@ -153,6 +157,7 @@ export default function StoreTicketList({ deviceId }) {
     }
   };
 
+  // 대기표 처리 완료 함수
   const handleComplete = async (ticketId, deviceId) => {
     try {
       const storeCode = deviceId;
@@ -183,8 +188,8 @@ export default function StoreTicketList({ deviceId }) {
     <LinearGradient 
       style={styles.container} 
       colors={['#BFC0D6', '#CBBCD8']}
-      start={{ x: 0, y: 0 }} // 왼쪽에서 시작
-      end={{ x: 0.5, y: 0 }} // 오른쪽에서 끝
+      start={{ x: 0, y: 0 }} 
+      end={{ x: 0.5, y: 0 }} 
     >
       <View style={styles.content}>
         <View style={styles.headerContainer}>

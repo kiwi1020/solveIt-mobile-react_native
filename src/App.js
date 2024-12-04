@@ -46,7 +46,6 @@ export default function App() {
 
     const registerForPushNotificationsAsync = async () => {
       try {
-        // 알림 권한 요청
         const { status: existingStatus } = await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
 
@@ -60,9 +59,7 @@ export default function App() {
           return;
         }
 
-        // Expo Push Token 가져오기
         const token = (await Notifications.getExpoPushTokenAsync({
-          // expo ID
           projectId: "d83c8420-525a-44c2-aca4-212b1481ddec"
         })).data;
         console.log("Expo Push Token:", token);
@@ -94,11 +91,11 @@ export default function App() {
     }
   
     try {
-      const docRef = doc(collection(db, "accept"), deviceId); // Firestore에서 입력된 UUID로 조회
+      const docRef = doc(collection(db, "accept"), deviceId); 
       const docSnap = await getDoc(docRef);
   
       if (docSnap.exists()) {
-        setSelectedRole("admin"); // 관리자 권한 설정
+        setSelectedRole("admin"); 
         Alert.alert("권한 확인", "관리자 권한이 확인되었습니다.");
         console.log("관리자 권한 확인됨:", docSnap.data());
       } else {
@@ -112,7 +109,7 @@ export default function App() {
 
   const copyToClipboard = async () => {
     const email = "fishman4535@gmail.com";
-    await Clipboard.setStringAsync(email); // 클립보드에 이메일 복사
+    await Clipboard.setStringAsync(email); 
     Alert.alert("복사 완료", "이메일이 클립보드에 복사되었습니다.");
   };
 
@@ -167,7 +164,6 @@ export default function App() {
           {!isValid && <Text style={styles.errorText}>유효한 UUID를 입력해주세요.</Text>}
         </View>
   
-        {/* 하단에 배치된 문의와 이메일 */}
         <View style={styles.footer}>
           <Text style={{
             textAlign: 'center',

@@ -15,8 +15,7 @@ const UserListStack = ({ deviceId, expoPushToken }) => (
     initialRouteName="StoreList"
     screenOptions={{
       headerBackTitle: "뒤로가기",
-      headerTintColor: '#000000', // 뒤로가기 버튼 색상 (예: 주황색)
-      
+      headerTintColor: '#000000', 
       
      
     }}
@@ -27,9 +26,9 @@ const UserListStack = ({ deviceId, expoPushToken }) => (
   options={{
     title: '주점 리스트',
     headerTitleStyle: {
-      color: '#000000', // 글자 색상 (예: 흰색)
-      fontWeight: 'bold', // 글자 굵기 (예: 굵게)
-      fontSize: 21, // 글자 크기 (선택 사항)
+      color: '#000000', 
+      fontWeight: 'bold', 
+      fontSize: 21, 
     },
     
   }}
@@ -38,9 +37,9 @@ const UserListStack = ({ deviceId, expoPushToken }) => (
     <Stack.Screen name="StoreDetail" 
     options={{
       headerTitleStyle: {
-        color: '#000000', // 글자 색상 (예: 흰색)
-        fontWeight: 'bold', // 글자 굵기 (예: 굵게)
-        fontSize: 21, // 글자 크기 (선택 사항)
+        color: '#000000',
+        fontWeight: 'bold', 
+        fontSize: 21, 
       },
       
     }}

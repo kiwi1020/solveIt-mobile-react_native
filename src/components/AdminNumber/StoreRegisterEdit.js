@@ -7,7 +7,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker"; // 이미지 선택을 위한 라이브러리 사용
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -25,8 +25,8 @@ import { LinearGradient } from "expo-linear-gradient";
 // 가게 정보를 저장하거나 수정하는 컴포넌트
 const StoreRegisterEdit = ({ route }) => {
   const [storeName, setStoreName] = useState("");
-  const [images, setImages] = useState([]); 
-  const { deviceId, action } = route.params; 
+  const [images, setImages] = useState([]);
+  const { deviceId, action } = route.params;
 
   let app;
   if (!getApps().length) {
@@ -34,10 +34,10 @@ const StoreRegisterEdit = ({ route }) => {
   } else {
     app = getApps()[0];
   }
-  const storage = getStorage(app); 
+  const storage = getStorage(app);
   const db = getFirestore(app);
 
-// 기존에 저장되어있는 이미지 표시
+  // 기존에 저장되어있는 이미지 표시
   useEffect(() => {
     const fetchStoreData = async () => {
       const docRef = doc(db, "store", deviceId);
@@ -47,7 +47,6 @@ const StoreRegisterEdit = ({ route }) => {
         const storeData = docSnap.data();
         setStoreName(storeData.name);
 
-      
         const formattedImages = (storeData.images || []).map((url) => ({
           uri: url,
         }));
@@ -65,7 +64,7 @@ const StoreRegisterEdit = ({ route }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       aspect: [4, 3],
       quality: 1,
-      allowsMultipleSelection: true, 
+      allowsMultipleSelection: true,
     });
 
     if (!result.canceled) {
@@ -80,7 +79,7 @@ const StoreRegisterEdit = ({ route }) => {
     for (let i = 0; i < images.length; i++) {
       const uri = images[i].uri;
       const fileNameArray = uri.split("/");
-      const fileName = fileNameArray[fileNameArray.length - 1]; 
+      const fileName = fileNameArray[fileNameArray.length - 1];
       const storageRef = ref(
         storage,
         `store_images/${deviceId}/profile/${fileName}`
@@ -88,7 +87,7 @@ const StoreRegisterEdit = ({ route }) => {
 
       const response = await fetch(uri);
       const blob = await response.blob();
-      await uploadBytes(storageRef, blob); 
+      await uploadBytes(storageRef, blob);
 
       const downloadURL = await getDownloadURL(storageRef);
       imageUrls.push(downloadURL);
@@ -115,10 +114,10 @@ const StoreRegisterEdit = ({ route }) => {
       const docRef = doc(db, "store", deviceId);
       await setDoc(docRef, {
         name: storeName,
-        images: imageUrls, // 여러 이미지 URL을 저장
+        images: imageUrls,
         storeCode: deviceId,
         nextNumber: 0,
-        storeStatus: 'closed',
+        storeStatus: "closed",
       });
 
       alert("가게 정보가 성공적으로 등록되었습니다!");
@@ -144,7 +143,7 @@ const StoreRegisterEdit = ({ route }) => {
         images: imageUrls,
         storeCode: deviceId,
         nextNumber: 0,
-        storeStatus: 'closed',
+        storeStatus: "closed",
       });
 
       alert("가게 정보가 성공적으로 수정되었습니다!");
@@ -165,50 +164,51 @@ const StoreRegisterEdit = ({ route }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 0.5, y: 0 }}
     >
-    <View>
-    <ScrollView
-  showsVerticalScrollIndicator={false} // 스크롤 바 숨김
-  contentContainerStyle={{ flexGrow: 1 }} // ScrollView 안의 콘텐츠가 전체 화면을 채우도록 설정
-    >
-     
-      <View style={styles.content}>
-        <Text style={styles.header}>
-          {action === "edit" ? "가게 정보 수정" : "가게 등록"}
-        </Text>
+      <View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
+          <View style={styles.content}>
+            <Text style={styles.header}>
+              {action === "edit" ? "가게 정보 수정" : "가게 등록"}
+            </Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="가게 이름을 입력하세요"
-          value={storeName}
-          onChangeText={setStoreName}
-        />
+            <TextInput
+              style={styles.input}
+              placeholder="가게 이름을 입력하세요"
+              value={storeName}
+              onChangeText={setStoreName}
+            />
 
-        <Text style={styles.label}>가게 이미지</Text>
-        <TouchableOpacity style={styles.imageUpload} onPress={pickImages}>
-        <View style={styles.imageContainer}>
-          {images.length > 0 ? (
-            images.map((image, index) => (
-              <Image
-                key={index}
-                source={{ uri: image.uri }}
-                style={styles.image}
-              />
-            ))
-          ) : (
-            <Text style={styles.uploadText}>이미지 업로드</Text>
-          )}
+            <Text style={styles.label}>가게 이미지</Text>
+            <TouchableOpacity style={styles.imageUpload} onPress={pickImages}>
+              <View style={styles.imageContainer}>
+                {images.length > 0 ? (
+                  images.map((image, index) => (
+                    <Image
+                      key={index}
+                      source={{ uri: image.uri }}
+                      style={styles.image}
+                    />
+                  ))
+                ) : (
+                  <Text style={styles.uploadText}>이미지 업로드</Text>
+                )}
+              </View>
+            </TouchableOpacity>
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleButtonPress}
+              >
+                <Text style={styles.buttonText}>{buttonTitle}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </TouchableOpacity>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
-            <Text style={styles.buttonText}>{buttonTitle}</Text>
-          </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
-    
-    </ScrollView>
-    </View>
     </LinearGradient>
   );
 };
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   button: {
-    backgroundColor: "#fff", 
+    backgroundColor: "#fff",
     paddingVertical: 12,
     borderRadius: 10,
     marginBottom: 15,

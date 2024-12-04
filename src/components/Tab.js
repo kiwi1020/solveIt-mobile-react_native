@@ -13,7 +13,7 @@ const Tab = createBottomTabNavigator();
 const TabNavigation = ({ deviceId, setSelectedRole, expoPushToken }) => {
   return (
     <Tab.Navigator
-      initialRouteName="홈" // 기본으로 표시할 탭 설정
+      initialRouteName="홈" 
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -33,19 +33,18 @@ const TabNavigation = ({ deviceId, setSelectedRole, expoPushToken }) => {
         tabBarInactiveTintColor: "gray",
       })}
     >
-      {/* 메인 탭 */}
+  
       <Tab.Screen
         name="메인"
         listeners={{
           tabPress: (e) => {
-            e.preventDefault(); // 기본 탭 이동 방지
-            setSelectedRole(null); // App.js로 이동
+            e.preventDefault(); 
+            setSelectedRole(null); 
           },
         }}
-        component={() => null} // 메인 탭은 아무것도 렌더링하지 않음
+        component={() => null} 
       />
 
-      {/* 홈 탭 */}
       <Tab.Screen name="홈">
         {() => (
           <UserListStack
@@ -55,7 +54,6 @@ const TabNavigation = ({ deviceId, setSelectedRole, expoPushToken }) => {
         )}
       </Tab.Screen>
 
-      {/* 번호표 탭 */}
       <Tab.Screen name="번호표">
         {() => <TicketUserStack deviceId={deviceId} />}
       </Tab.Screen>

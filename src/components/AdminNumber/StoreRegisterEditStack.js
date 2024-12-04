@@ -1,5 +1,3 @@
-// 넘버 - 스택
-//
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import StoreRegisterEdit from './StoreRegisterEdit';
@@ -8,12 +6,13 @@ import { useEffect } from 'react';
 
 const Stack = createStackNavigator();
 
+//가게 설정 파트 스택 네비게이터
 const StoreResisterStack = ({ deviceId })  => (
 
   <Stack.Navigator 
-  initialRouteName="StoreRegisterButton" // 초기 화면 설정
+  initialRouteName="StoreRegisterButton" 
   screenOptions={{
-    headerBackTitle: "뒤로가기", // 뒤로가기 버튼 텍스트 수정
+    headerBackTitle: "뒤로가기", 
   }}
 >
   <Stack.Screen

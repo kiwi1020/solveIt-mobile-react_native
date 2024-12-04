@@ -47,7 +47,6 @@ const StoreRegisterButton = ({ navigation, route }) => {
   const db = getFirestore(app);
 
   // 기존의 등록된 사용자 가게가 존재하는지 검사
-  // 
   useFocusEffect(
     React.useCallback(() => {
       const checkImageExists = async () => {
