@@ -19,7 +19,7 @@ const StoreTicketStack = ({ deviceId }) => (
     <Stack.Screen name="StoreTicketStack" component={StoreTicketStack} options={{ title: '게시글 목록' }} />
     {() => <StoreTicketList deviceId={deviceId} />}<Stack.Screen 
       name="StoreTicketList" 
-      options={{ title: "가게 번호 목록" }}
+      options={{ title: "가게 번호표 목록" }}
     >
       {() => <StoreTicketList deviceId={deviceId} />}
     </Stack.Screen>
