@@ -16,7 +16,6 @@ export default function MyTicket({ deviceId }) {
   useEffect(() => {
     const fetchTicket = async () => {
       try {
-        // users/{deviceId}에서 대기표 정보 가져오기
         const userRef = doc(db, "users", deviceId);
         const userDoc = await getDoc(userRef);
   
@@ -26,12 +25,11 @@ export default function MyTicket({ deviceId }) {
           setPersonnel(userData.personnel); 
           setState(userData.state);
   
-          // 가게 이름 가져오기
           const storeRef = doc(db, "store", userData.storeCode);
           const storeDoc = await getDoc(storeRef);
   
           if (storeDoc.exists()) {
-            setStoreName(storeDoc.data().name); // 가게 이름 상태 업데이트
+            setStoreName(storeDoc.data().name);
           } else {
             console.log("가게 정보를 찾을 수 없습니다.");
           }
@@ -53,34 +51,24 @@ export default function MyTicket({ deviceId }) {
 
   const cancelTicket = async () => {
     try {
-      // users/{deviceId}에서 대기표 정보 가져오기
       const userRef = doc(db, "users", deviceId);
       const userDoc = await getDoc(userRef);
   
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        const storeCode = userData.storeCode; // storeCode가 users 문서에 저장되어 있다고 가정
-      
-        // store/{storeCode}/tickets/{deviceId}에서 상태를 "cancel"로 업데이트
+        const storeCode = userData.storeCode; 
         const ticketRef = doc(db, "store", storeCode, "tickets", deviceId);
-  
-        // 트랜잭션을 사용하여 두 문서를 동시에 업데이트 및 삭제
         const batch = writeBatch(db);
         
-        // users/{deviceId}에서 상태를 "cancel"로 업데이트
         batch.update(userRef, { state: "cancel" });
-        
-        // store/{storeCode}/tickets/{deviceId}에서 상태를 "cancel"로 업데이트
         batch.update(ticketRef, { state: "cancel" });
 
-        // Firestore 배치 업데이트 후 users/{deviceId} 문서 삭제
         await batch.commit();
-        await deleteDoc(userRef); // 문서 삭제
+        await deleteDoc(userRef); 
 
-        // 로컬 상태 업데이트
-        setMyTicketNumber(null); // 번호표 제거
-        setPersonnel(null); // 인원 수 초기화
-        setState(null); // 상태 초기화
+        setMyTicketNumber(null); 
+        setPersonnel(null); 
+        setState(null); 
         console.log("대기표 취소 및 사용자 문서 삭제 완료");
       } else {
         console.log("사용자 정보가 없습니다.");

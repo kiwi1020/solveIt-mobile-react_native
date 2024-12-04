@@ -8,14 +8,11 @@ import { ScrollView, Image } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text} from "react-native";
 
-
-
 const StoreList = ({ route }) => {
   const navigation = useNavigation();
   const [stores, setStores] = useState([]);
   const {deviceId, expoPushToken} = route.params;
 
-  // Firebase 앱 초기화
   let app;
   if (!getApps().length) {
     app = initializeApp(firebaseConfig);
@@ -24,7 +21,6 @@ const StoreList = ({ route }) => {
   }
   const db = getFirestore(app);
 
-  // Firestore에서 가게 데이터 가져오기
   const fetchStores = async () => {
     try {
       const storeCollection = collection(db, "store");
@@ -33,7 +29,7 @@ const StoreList = ({ route }) => {
         id: doc.id,
         ...doc.data(),
       }));
-      setStores(storeData); // state에 데이터 저장
+      setStores(storeData);
     } catch (error) {
       console.error("가게 목록을 가져오는 중 오류 발생:", error);
     }
@@ -58,7 +54,6 @@ const StoreList = ({ route }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 0.5, y: 0 }}
     >
-      {/* 전체 화면을 ScrollView로 감싸기 */}
       <ScrollView>
         {stores.map((store) => (
           <StoreCard
@@ -72,16 +67,15 @@ const StoreList = ({ route }) => {
             {store.storeStatus === 'closed' && (
                 <Text style={styles.overlayText}>가게 오픈 준비중입니다!</Text>
               )}
-            {/* 첫 번째 이미지만 오른쪽에 배치 */}
             <ImageContainer>
               <Image
                 source={{ uri: store.images?.[0] }}
                 style={{
-                  width: 100, // 크기 조정
-                  height: 80, // 크기 조정
+                  width: 100, 
+                  height: 80, 
                   borderRadius: 20,
                 }}
-                resizeMode="contain" // 이미지가 잘리지 않도록 설정
+                resizeMode="contain" 
               />
               
             </ImageContainer>

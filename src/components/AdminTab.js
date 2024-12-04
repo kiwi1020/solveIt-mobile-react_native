@@ -11,13 +11,12 @@ const Tab = createBottomTabNavigator();
 const TabNavigation = ({ deviceId, setSelectedRole  }) => {
   return (
     <Tab.Navigator
-    initialRouteName="번호표 관리" // 기본으로 표시할 탭 설정
+    initialRouteName="번호표 관리" 
 
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          // 라우트 이름에 따라 아이콘 선택
           if (route.name === "메인") {
             iconName = focused ? "list" : "list";
           } else if (route.name === "번호표 관리") {
@@ -25,25 +24,22 @@ const TabNavigation = ({ deviceId, setSelectedRole  }) => {
           } else if (route.name === "가게 관리") {
             iconName = focused ? "settings" : "settings-outline";
           }
-
-          // 아이콘 렌더링
           return <Icon name={iconName} size={size} color={color} />;
         },
-        headerShown: false, // 모든 탭의 상단 헤더 숨김
-        tabBarActiveTintColor: "#6661D5", // 활성화된 탭 색상
-        tabBarInactiveTintColor: "gray", // 비활성화된 탭 색상
+        headerShown: false, 
+        tabBarActiveTintColor: "#6661D5", 
+        tabBarInactiveTintColor: "gray",
       })}
     >
-      {/* 각 스택에 deviceId 전달 */}
       <Tab.Screen
         name="메인"
         listeners={{
           tabPress: (e) => {
-            e.preventDefault(); // 기본 탭 이동 방지
-            setSelectedRole(null); // App.js로 이동
+            e.preventDefault(); 
+            setSelectedRole(null); 
           },
         }}
-        component={() => null} // 메인 탭은 아무것도 렌더링하지 않음
+        component={() => null} 
       />
       <Tab.Screen name="번호표 관리">
         {() => <StoreTicketStack deviceId={deviceId} />}
