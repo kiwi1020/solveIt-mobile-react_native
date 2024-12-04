@@ -15,7 +15,7 @@ const UserListStack = ({ deviceId, expoPushToken }) => (
     initialRouteName="StoreList"
     screenOptions={{
       headerBackTitle: "뒤로가기",
-      headerTintColor: '#ffffff', // 뒤로가기 버튼 색상 (예: 주황색)
+      headerTintColor: '#000000', // 뒤로가기 버튼 색상 (예: 주황색)
       
       
      
@@ -37,8 +37,13 @@ const UserListStack = ({ deviceId, expoPushToken }) => (
 />
     <Stack.Screen name="StoreDetail" 
     options={{
-    title: '',
-  }}
+      headerTitleStyle: {
+        color: '#000000', // 글자 색상 (예: 흰색)
+        fontWeight: 'bold', // 글자 굵기 (예: 굵게)
+        fontSize: 21, // 글자 크기 (선택 사항)
+      },
+      
+    }}
     component={StoreDetail} />
   </Stack.Navigator>
 );
