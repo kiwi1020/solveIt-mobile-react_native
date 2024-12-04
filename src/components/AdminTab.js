@@ -20,10 +20,10 @@ const TabNavigation = ({ deviceId, setSelectedRole  }) => {
           // 라우트 이름에 따라 아이콘 선택
           if (route.name === "메인") {
             iconName = focused ? "list" : "list";
-          } else if (route.name === "홈") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "번호표") {
-            iconName = focused ? "receipt" : "receipt-outline";
+          } else if (route.name === "번호표 관리") {
+            iconName = focused ? "clipboard" : "clipboard-outline";
+          } else if (route.name === "가게 관리") {
+            iconName = focused ? "settings" : "settings-outline";
           }
 
           // 아이콘 렌더링
