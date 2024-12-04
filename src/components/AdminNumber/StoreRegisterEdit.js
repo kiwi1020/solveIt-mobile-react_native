@@ -141,7 +141,7 @@ const StoreRegisterEdit = ({ route }) => {
       const docRef = doc(db, "store", deviceId);
       await updateDoc(docRef, {
         name: storeName,
-        images: imageUrls, // 여러 이미지 URL을 업데이트
+        images: imageUrls,
         storeCode: deviceId,
         nextNumber: 0,
         storeStatus: 'closed',
@@ -159,6 +159,7 @@ const StoreRegisterEdit = ({ route }) => {
   const handleButtonPress = action === "edit" ? handleEdit : handleRegister;
 
   return (
+    <ScrollView>
     <LinearGradient
       style={styles.container}
       colors={["#BFC0D6", "#CBBCD8"]}
@@ -166,7 +167,6 @@ const StoreRegisterEdit = ({ route }) => {
       end={{ x: 0.5, y: 0 }}
     >
       <View style={styles.content}>
-      <ScrollView>
         <Text style={styles.header}>
           {action === "edit" ? "가게 정보 수정" : "가게 등록"}
         </Text>
@@ -200,9 +200,9 @@ const StoreRegisterEdit = ({ route }) => {
             <Text style={styles.buttonText}>{buttonTitle}</Text>
           </TouchableOpacity>
         </View>
-        </ScrollView>
       </View>
     </LinearGradient>
+    </ScrollView>
   );
 };
 
@@ -253,8 +253,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9F9F9", // 부드러운 배경색
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 75,
+    height: 75,
     margin: 5,
     borderRadius: 10,
   },
