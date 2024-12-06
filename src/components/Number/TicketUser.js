@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback  } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import firebaseApp from "../../firebase/firebaseConfig";
-import { getFirestore, doc, getDoc, updateDoc, writeBatch, deleteDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, writeBatch, deleteDoc } from "firebase/firestore";
 import { LinearGradient } from 'expo-linear-gradient';
+import { useFocusEffect } from "@react-navigation/native";
+
 
 const db = getFirestore(firebaseApp);
+
 
 export default function MyTicket({ deviceId }) {
   const [myTicketNumber, setMyTicketNumber] = useState(null); // 내가 뽑은 번호
@@ -13,62 +16,65 @@ export default function MyTicket({ deviceId }) {
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [storeName, setStoreName] = useState(""); // 가게 이름 상태
 
-  useEffect(() => {
-    const fetchTicket = async () => {
-      try {
-        const userRef = doc(db, "users", deviceId);
-        const userDoc = await getDoc(userRef);
-  
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setMyTicketNumber(userData.number); 
-          setPersonnel(userData.personnel); 
-          setState(userData.state);
-  
-          const storeRef = doc(db, "store", userData.storeCode);
-          const storeDoc = await getDoc(storeRef);
-  
-          if (storeDoc.exists()) {
-            setStoreName(storeDoc.data().name);
-          } else {
-            console.log("가게 정보를 찾을 수 없습니다.");
-          }
+  const fetchTicket = async () => {
+    try {
+      const userRef = doc(db, "users", deviceId);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setMyTicketNumber(userData.number);
+        setPersonnel(userData.personnel);
+        setState(userData.state);
+
+        const storeRef = doc(db, "store", userData.storeCode);
+        const storeDoc = await getDoc(storeRef);
+
+        if (storeDoc.exists()) {
+          setStoreName(storeDoc.data().name);
         } else {
-          console.log("내 대기표가 없습니다.");
-          setMyTicketNumber(null);
-          setPersonnel(null);
-          setState(null);
+          console.log("가게 정보를 찾을 수 없습니다.");
         }
-      } catch (error) {
-        console.error("Failed to fetch ticket:", error);
-      } finally {
-        setLoading(false);
+      } else {
+        console.log("내 대기표가 없습니다.");
+        setMyTicketNumber(null);
+        setPersonnel(null);
+        setState(null);
       }
-    };
-  
-    fetchTicket();
-  }, [deviceId]);
+    } catch (error) {
+      console.error("Failed to fetch ticket:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true); // 로딩 상태 초기화
+      fetchTicket(); // 데이터를 다시 불러옴
+    }, [deviceId]) // `deviceId`가 변경될 때만 다시 실행
+  );
 
   const cancelTicket = async () => {
     try {
       const userRef = doc(db, "users", deviceId);
       const userDoc = await getDoc(userRef);
-  
+
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        const storeCode = userData.storeCode; 
+        const storeCode = userData.storeCode;
         const ticketRef = doc(db, "store", storeCode, "tickets", deviceId);
         const batch = writeBatch(db);
-        
+
         batch.update(userRef, { state: "cancel" });
         batch.update(ticketRef, { state: "cancel" });
 
         await batch.commit();
-        await deleteDoc(userRef); 
+        await deleteDoc(userRef);
 
-        setMyTicketNumber(null); 
-        setPersonnel(null); 
-        setState(null); 
+        setMyTicketNumber(null);
+        setPersonnel(null);
+        setState(null);
         console.log("대기표 취소 및 사용자 문서 삭제 완료");
       } else {
         console.log("사용자 정보가 없습니다.");
@@ -78,6 +84,7 @@ export default function MyTicket({ deviceId }) {
     }
   };
 
+  
   if (loading) {
     return (
       <View style={styles.container}>
