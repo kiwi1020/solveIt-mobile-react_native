@@ -58,15 +58,13 @@ const StoreList = ({ route }) => {
         {stores.map((store) => (
           <StoreCard
             key={store.id}
-            onPress={() => store.storeStatus !== 'closed' && navigateToDetail(store.storeCode, deviceId, expoPushToken)}
-            style={[
-              store.storeStatus === 'closed' && styles.overlay 
-            ]}
+            onPress={() => store.storeStatus !== 'closed' && 
+              navigateToDetail(store.storeCode, deviceId, expoPushToken)}
+            
           >
+            
             <StoreName>{store.name}</StoreName>
-            {store.storeStatus === 'closed' && (
-                <Text style={styles.overlayText}>가게 오픈 준비중입니다!</Text>
-              )}
+
             <ImageContainer>
               <Image
                 source={{ uri: store.images?.[0] }}
@@ -79,6 +77,11 @@ const StoreList = ({ route }) => {
               />
               
             </ImageContainer>
+            {store.storeStatus === 'closed' && (
+              <Overlay>
+                <Text style={styles.overlayText}>가게 오픈 준비중입니다!</Text>
+              </Overlay>
+            )}
           </StoreCard>
         ))}
       </ScrollView>
@@ -91,28 +94,27 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     flex: 1,
-    
-
-
-  
 },
-overlay: {
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "rgba(0, 0, 0, 0.4)",
-  justifyContent: "center",
-  alignItems: "center",
-  borderRadius: 12,
-},
+
 overlayText: {
   color: "#fff",
-  fontSize: 18,
+  fontSize: 22,
   fontWeight: "bold",
 },
 });
 
+const Overlay = styled.View`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  border-radius: 18px;
+  
+`;
 
 const Container = styled.View`
   flex: 1;
@@ -135,6 +137,8 @@ const StoreCard = styled.TouchableOpacity`
   flex-direction: row; /* 가로로 배치 */
   justify-content: space-between; /* 왼쪽 텍스트, 오른쪽 이미지 배치 */
   align-items: center; /* 세로 중앙 정렬 */
+  position: relative; /* 오버레이와 다른 요소의 상대 위치 지정 */
+
   shadow-color: #0000000;
   shadow-opacity: 1;
   shadow-radius: 4px;
