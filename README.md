@@ -1,3 +1,15 @@
+<img src="https://github.com/user-attachments/assets/aad1107d-b375-4655-8c91-54bbcb4f0c1e" style="width: 200px;">
+<img src="https://github.com/user-attachments/assets/189ef4fc-8366-4cdc-8574-b6384195b70b" style="width: 200px;">
+<img src="https://github.com/user-attachments/assets/ced99d9c-6a9f-4dd8-ae11-355534c54853" style="width: 200px;">
+
+---
+
+<img src="https://github.com/user-attachments/assets/72b595cb-6877-4ad6-8c5c-5bd8b13f31d4" style="width: 200px;">
+<img src="https://github.com/user-attachments/assets/33a16854-817f-474c-a00d-49920d71a81b" style="width: 200px;">
+<img src="https://github.com/user-attachments/assets/d9af8e3d-0bee-4944-808c-cdfee5ec609a" style="width: 200px;">
+
+---
+
 # Festival Queue Management Application
 
 ## 프로젝트 개요
@@ -46,12 +58,3 @@
 - **2개월**
 - **서동현** 
 - **유우열**
-
----
-
-![그림01](https://github.com/user-attachments/assets/aad1107d-b375-4655-8c91-54bbcb4f0c1e)
-![그림02](https://github.com/user-attachments/assets/189ef4fc-8366-4cdc-8574-b6384195b70b)
-![그림03](https://github.com/user-attachments/assets/ced99d9c-6a9f-4dd8-ae11-355534c54853)
-![그림04](https://github.com/user-attachments/assets/72b595cb-6877-4ad6-8c5c-5bd8b13f31d4)
-![그림05](https://github.com/user-attachments/assets/33a16854-817f-474c-a00d-49920d71a81b)
-![그림06](https://github.com/user-attachments/assets/d9af8e3d-0bee-4944-808c-cdfee5ec609a)
