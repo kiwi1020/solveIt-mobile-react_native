@@ -2,8 +2,8 @@
 
 ## 프로젝트 개요
 
-주점 부스 대기 시간이 길고, 부스 정보를 찾기 어려워 축제의 다른 즐길 거리를 놓치거나 방문 결정을 내리기 어려운 문제를 해결하고,  
-부스 운영자가 대기 상황을 효율적으로 관리할 수 있도록 학생들이 대기 시간 없이 축제를 온전히 즐길 수 있는 애플리케이션을 개발.
+주점 부스 대기 시간이 길어 푸드트럭, 공연 등 축제의 다양한 즐길 거리를 놓치게 되는 문제를 해결하고, 부스 정보를 찾기 어렵고 혼잡함으로 인해 방문 결정을 내리기 어려운 문제를 해결하고자 설계했습니다.
+부스 운영자가 대기 상황을 효율적으로 관리할 수 있도록 학생들이 대기 시간 없이 축제를 온전히 즐길 수 있는 어플리케이션입니다.
 
 ---
 
@@ -45,4 +45,13 @@
 ## 개발 기간
 - **2개월**
 - **서동현** 
-- **유우열** 
+- **유우열**
+
+---
+
+![그림01](https://github.com/user-attachments/assets/aad1107d-b375-4655-8c91-54bbcb4f0c1e)
+![그림02](https://github.com/user-attachments/assets/189ef4fc-8366-4cdc-8574-b6384195b70b)
+![그림03](https://github.com/user-attachments/assets/ced99d9c-6a9f-4dd8-ae11-355534c54853)
+![그림04](https://github.com/user-attachments/assets/72b595cb-6877-4ad6-8c5c-5bd8b13f31d4)
+![그림05](https://github.com/user-attachments/assets/33a16854-817f-474c-a00d-49920d71a81b)
+![그림06](https://github.com/user-attachments/assets/d9af8e3d-0bee-4944-808c-cdfee5ec609a)
