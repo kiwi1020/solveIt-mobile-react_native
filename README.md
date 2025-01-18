@@ -76,7 +76,6 @@
 - **간소화된 사용자 인증** : 별도의 회원가입 없이 앱 실행 시 고유 UUID를 자동 생성하여 사용자를 식별, 서비스 접근성을 대폭 개선
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/9c9b6215-4126-45da-9a26-87bf9c99273c"  width="1000"   />
 </p>
 
 - **운영자 중심의 관리 기능** : Firebase Firestore 및 FireStorage를 통해 운영자가 대기표 및 가게 정보를 실시간으로 관리 가능하며 정확한 정보 제공
