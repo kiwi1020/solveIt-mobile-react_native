@@ -1,6 +1,10 @@
 <h1 align="center"><strong>축제 ON</strong></h1>
 <h3 align="center">축제를 즐기기 위한 축제 웨이팅 어플</h3>
 
+<p align="right">
+<img src="https://img.shields.io/badge/유튜브%20바로가기-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="유튜브 바로가기" onclick="window.open('https://www.youtube.com/watch?v=zg-HLhObBTU', '_blank')">
+</p>
+
 <p align="center">
 <img src="https://github.com/user-attachments/assets/aad1107d-b375-4655-8c91-54bbcb4f0c1e" style="width: 200px;">
 <img src="https://github.com/user-attachments/assets/189ef4fc-8366-4cdc-8574-b6384195b70b" style="width: 200px;">
