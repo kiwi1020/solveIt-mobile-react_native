@@ -2,7 +2,7 @@
 <h3 align="center">축제를 즐기기 위한 축제 웨이팅 어플</h3>
 
 <p align="right">
-  <a href="https://github.com/mimo626/knuKproject](https://www.youtube.com/watch?v=zg-HLhObBTU">
+  <a href="https://www.youtube.com/watch?v=zg-HLhObBTU">
 <img src="https://img.shields.io/badge/유튜브%20바로가기-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="유튜브 바로가기">
   </a>
 </p>
