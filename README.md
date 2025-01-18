@@ -81,20 +81,17 @@
 
 - **운영자 중심의 관리 기능** : Firebase Firestore 및 FireStorage를 통해 운영자가 대기표 및 가게 정보를 실시간으로 관리 가능하며 정확한 정보 제공
 <p align="center">
-<img src="https://github.com/user-attachments/assets/fa14e3d7-9942-47e4-9a2d-8708bac6525f"  width="700"  />
 </p>
 
 
 - **비상 상황에 대한 실시간 대응** : Expo Notifications를 활용해 대기표 발급 중단, 호출 취소 등 긴급 상황을 실시간으로 사용자에게 알림
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/a6ee9b51-c6fc-4750-9ffa-f79ee00b2dbe"  width="700"  />
 </p>
 
 - **실시간 데이터 처리와 안정성** : Firebase의 runTransaction 기능을 활용해 다수 사용자가 동시에 대기표를 발급하거나 상태를 확인할 때 발생할 수 있는 데이터 충돌 및 서버 과부하 문제를 해결
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/a6ee9b51-c6fc-4750-9ffa-f79ee00b2dbe"  width="700"  />
 </p>
 
 ---  
