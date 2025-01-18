@@ -1,3 +1,43 @@
+<h1 align="center">MODO MODO<br><strong>모든 도시락, 모두의 도시락</strong></h1>
+<h3 align="center">모두를 위한 도시락 예약 플랫폼</h3>
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/47d7b689-2a63-44c4-9185-42a33bfe6667"  width="850" height="480"  />
+</p>
+
+
+---
+## 1. 프로젝트 개요
+
+**📊 시장 분석**
+- 기존 프랜차이즈 매장은 개별 예약 사이트 운영으로 **효율성 및 다양성 부족**  
+- 서비스 지역 제한 및 유지 비용 증가로 **경쟁력 약화**  
+- 독립 사이트 운영 부담으로 **소상공인 사업자 어려움 가중**  
+
+
+**💡 필요성**  
+- 다양한 도시락 브랜드를 한곳에 모아 **편리한 선택 제공**  
+- **정기 결제 및 구독 서비스**로 사용자 편의성 극대화  
+- **시간 절약과 건강한 식사** 제공  
+
+
+**🚀 기대 효과**  
+- **편리성 증대**: 원하는 도시락을 쉽고 빠르게 선택  
+- **상권 활성화**: 고객과 가맹점 간 협력 강화  
+- **고객 확보**: 신규 고객 유치와 기존 고객 유지  
+- **비즈니스 성과 향상**: 마케팅과 매출 증대 효과 기대  
+---
+
+
+## 2. 개발 기간
+<h3 align="center">24/03/01 ~ 24/10/31</h3>
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/c8772bd4-6ffc-4704-b734-dd6d7b03eba9"  width="800" height="480"  />
+</p>
+
+
+
 <img src="https://github.com/user-attachments/assets/aad1107d-b375-4655-8c91-54bbcb4f0c1e" style="width: 200px;">
 <img src="https://github.com/user-attachments/assets/189ef4fc-8366-4cdc-8574-b6384195b70b" style="width: 200px;">
 <img src="https://github.com/user-attachments/assets/ced99d9c-6a9f-4dd8-ae11-355534c54853" style="width: 200px;">
