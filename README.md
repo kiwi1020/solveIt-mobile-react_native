@@ -1,11 +1,12 @@
-<h1 align="center"><strong>축제 ON</strong></h1>
-<h3 align="center">축제를 즐기기 위한 축제 웨이팅 어플</h3>
-
 <p align="right">
-  <a href="https://www.youtube.com/watch?v=zg-HLhObBTU">
+  <a href="https://www.youtube.com/watch?v=zg-HLhObBTU" align="right">
 <img src="https://img.shields.io/badge/유튜브%20바로가기-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="유튜브 바로가기">
   </a>
 </p>
+
+<h1 align="center"><strong>축제 ON</strong></h1>
+
+<h3 align="center">축제를 즐기기 위한 축제 웨이팅 어플</h3>
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/aad1107d-b375-4655-8c91-54bbcb4f0c1e" style="width: 200px;">
@@ -54,19 +55,25 @@
 
 - **서동현**
 
-  기능 : 기획자, UX Designer, Tester, 일반 사용자 Part 개발
+  역할 : 기획자, UX Designer, Tester, 일반 사용자 Part 개발
+  기능 : DB설계, 기능 설계, 권한별 기능 설계, 사용자 대기표 개발, UUID 개발, 디버깅, 관리자 대기표 개발
 
 - **유우열**
 
-  기능 : PM, UI Designer, Database 설계, 주점 관리 Part 개발
-  
+  역할 : PM, UI Designer, Database 설계, 주점 관리 Part 개발
+  기능 : 가게 수정 기능 개발, 가게 오픈 마감 기능 개발, 알림 기능 개발, firebase 연동, Modal창 개발, 게시판 개발
 ---
 
 ## 4. 개발 환경
 
+- **프레임워크 **
 ![Expo](https://img.shields.io/badge/Expo-1B1F23?style=for-the-badge&logo=expo&logoColor=white)<img src="https://img.shields.io/badge/52.0.6-515151?style=for-the-badge">
 ![React Native](https://img.shields.io/badge/React%20Native-5E5E5E?style=for-the-badge&logo=react&logoColor=61DAFB)<img src="https://img.shields.io/badge/0.76.2-515151?style=for-the-badge">
+
+- **DB **
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white)<img src="https://img.shields.io/badge/11.0.2-515151?style=for-the-badge">
+
+- **기타 기술 **
 ![JSX](https://img.shields.io/badge/JSX-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![Styled Components](https://img.shields.io/badge/Styled%20Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)<img src="https://img.shields.io/badge/6.1.13-515151?style=for-the-badge">
 
