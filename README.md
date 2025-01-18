@@ -78,6 +78,9 @@
 - **DB:**
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white)<img src="https://img.shields.io/badge/11.0.2-515151?style=for-the-badge">
 
+- **협업 툴:**
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+  
 - **기타 기술:**
 ![JSX](https://img.shields.io/badge/JSX-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![Styled Components](https://img.shields.io/badge/Styled%20Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)<img src="https://img.shields.io/badge/6.1.13-515151?style=for-the-badge">
