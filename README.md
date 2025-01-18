@@ -51,60 +51,7 @@
 <h3 align="center">24/03/01 ~ 24/10/31</h3>
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/2ee819da-ecc0-4ce3-b421-ed1f642ec233"  width="900"   />
-</p>
-
-## 3. 팀원 소개 및 역할💡
-
-- **서동현**
-
-  역할 : 기획자, UX Designer, Tester, 일반 사용자 Part 개발
-  
-  기능 : DB설계, 기능 설계, 권한별 기능 설계, 사용자 대기표 개발, UUID 개발, 디버깅, 관리자 대기표 개발
-
-- **유우열**
-
-  역할 : PM, UI Designer, Database 설계, 주점 관리 Part 개발
-  
-  기능 : 가게 수정 기능 개발, 가게 오픈 마감 기능 개발, 알림 기능 개발, firebase 연동, Modal창 개발, 게시판 개발
----
-
-## 4. 개발 환경
-
-- **프레임워크:**
-![Expo](https://img.shields.io/badge/Expo-1B1F23?style=for-the-badge&logo=expo&logoColor=white)<img src="https://img.shields.io/badge/52.0.6-515151?style=for-the-badge">
-![React Native](https://img.shields.io/badge/React%20Native-5E5E5E?style=for-the-badge&logo=react&logoColor=61DAFB)<img src="https://img.shields.io/badge/0.76.2-515151?style=for-the-badge">
-
-- **DB:**
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white)<img src="https://img.shields.io/badge/11.0.2-515151?style=for-the-badge">
-
-- **협업 툴:**
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
-  
-- **기타 기술:**
-![JSX](https://img.shields.io/badge/JSX-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![Styled Components](https://img.shields.io/badge/Styled%20Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)<img src="https://img.shields.io/badge/6.1.13-515151?style=for-the-badge">
-
---- 
-
-## 5. 차별점 
-
-- **간소화된 사용자 인증** : 별도의 회원가입 없이 앱 실행 시 고유 UUID를 자동 생성하여 사용자를 식별, 서비스 접근성을 대폭 개선
-
-<p align="center">
-</p>
-
-- **운영자 중심의 관리 기능** : Firebase Firestore 및 FireStorage를 통해 운영자가 대기표 및 가게 정보를 실시간으로 관리 가능하며 정확한 정보 제공
-<p align="center">
-</p>
-
-
-- **비상 상황에 대한 실시간 대응** : Expo Notifications를 활용해 대기표 발급 중단, 호출 취소 등 긴급 상황을 실시간으로 사용자에게 알림
-
-<p align="center">
-</p>
-
-- **실시간 데이터 처리와 안정성** : Firebase의 runTransaction 기능을 활용해 다수 사용자가 동시에 대기표를 발급하거나 상태를 확인할 때 발생할 수 있는 데이터 충돌 및 서버 과부하 문제를 해결
+<img src="https://github.com/user-attachments/assets/2ee819da-ecc0-4ce3-b421-ed1f642ec233"  width="900"  춤
 
 <p align="center">
 </p>
