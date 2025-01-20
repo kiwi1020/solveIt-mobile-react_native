@@ -48,7 +48,7 @@
 
 
 ## 2. 개발 기간
-<h3 align="center">24/03/01 ~ 24/10/31</h3>
+<h3 align="center">24/09/01 ~ 24/12/01</h3>
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/2ee819da-ecc0-4ce3-b421-ed1f642ec233"  width="900"   />
