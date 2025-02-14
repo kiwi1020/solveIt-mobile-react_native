@@ -136,7 +136,63 @@ expo start -c
 ## 7. 프로젝트 후기
 
 - **서동현**  
-"."  
+"그동안 웹 개발  
+- **기타 기술:**
+![JSX](https://img.shields.io/badge/JSX-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Styled Components](https://img.shields.io/badge/Styled%20Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)<img src="https://img.shields.io/badge/6.1.13-515151?style=for-the-badge">
+
+--- 
+
+## 5. 차별점 
+
+- **간소화된 사용자 인증** : 별도의 회원가입 없이 앱 실행 시 고유 UUID를 자동 생성하여 사용자를 식별, 서비스 접근성을 대폭 개선
+
+<p align="center">
+</p>
+
+- **운영자 중심의 관리 기능** : Firebase Firestore 및 FireStorage를 통해 운영자가 대기표 및 가게 정보를 실시간으로 관리 가능하며 정확한 정보 제공
+<p align="center">
+</p>
+
+
+- **비상 상황에 대한 실시간 대응** : Expo Notifications를 활용해 대기표 발급 중단, 호출 취소 등 긴급 상황을 실시간으로 사용자에게 알림
+
+<p align="center">
+</p>
+
+- **실시간 데이터 처리와 안정성** : Firebase의 runTransaction 기능을 활용해 다수 사용자가 동시에 대기표를 발급하거나 상태를 확인할 때 발생할 수 있는 데이터 충돌 및 서버 과부하 가능성을 낮춤
+
+<p align="center">
+</p>
+
+---  
+## 6. 설치 방법
+
+```sh
+npm install -g expo-cli
+expo init <FestivalON>
+
+npm install
+npm install @react-navigation/native
+npm install @react-navigation/stack
+npm install firebase
+npm install styled-components
+
+expo install react-native-screens
+expo install react-native-safe-area-context
+expo install react-native-gesture-handle
+expo install react-native-reanimated
+expo install react-native-get-random-values
+expo install expo-notifications
+expo install expo-linear-gradient
+expo start -c
+```
+
+
+## 7. 프로젝트 후기
+
+- **서동현**  
+이번 프로젝트를 통해 React Native와 Expo를 활용한 실시간 데이터베이스 연동, 푸시 알림 구현 등 다양한 기술을 경험할 수 있었습니다. 특히, 실제 사용자들이 앱을 이용하는 환경을 고려한 UX 설계와 데이터 동기화 최적화의 중요성을 실감했습니다. 아쉬운 점은 어플을 출시하는 방향으로 가지 않기에 대규모 처리 하는 시스템을 직접적으로 경험해 볼 수 없어서 아쉬웠습니다. 그래도 많이 배울 수 있던 프로젝트여서 좋았습니다.
 
 - **유우열**  
 "이번 프로젝트에서 리액트 네이티브와 엑스포를 활용하여 모바일 앱을 개발했습니다. 리액트 네이티브의 장점은 한 번의 코드로 iOS와 Android 앱을 동시에 개발할 수 있다는 점이었습니다. Expo는 개발 환경 설정과 빌드 과정을 매우 간소화해줘서, 빠르게 프로토타입을 개발할 수 있었습니다. 파이어베이스를 활용한 데이터 저장 및 관리를 하면서, NoSQL의 강점을 잘 이해하게 되었습니다."  
